@@ -1,0 +1,474 @@
+---
+const technologies = [
+	// 🤖 IA & Development
+	{
+		name: "Claude Flow",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/anthropic/white",
+	},
+	{
+		name: "Claude Code",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/anthropic/white",
+	},
+	{
+		name: "Gemini CLI",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/googlegemini/white",
+	},
+	{
+		name: "VS Code",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/visualstudiocode/white",
+	},
+	{
+		name: "Google Antigravity",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/google/white",
+	},
+	{
+		name: "Android Studio",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/androidstudio/white",
+	},
+	{
+		name: "Xcode (ligeras nociones)",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/xcode/white",
+	},
+	{
+		name: "Git",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/git/white",
+	},
+	{
+		name: "Github",
+		category: "🤖 IA & Development",
+		iconUrl: "https://cdn.simpleicons.org/github/white",
+	},
+
+	// 🛠️ Linux
+	{
+		name: "Linux",
+		category: "🛠️ Linux",
+		iconUrl: "https://cdn.simpleicons.org/linux/white",
+	},
+	{
+		name: "Proxmox",
+		category: "🛠️ Linux",
+		iconUrl: "https://cdn.simpleicons.org/proxmox/white",
+	},
+	{
+		name: "Virtualbox",
+		category: "🛠️ Linux",
+		iconUrl: "https://cdn.simpleicons.org/virtualbox/white",
+	},
+	{
+		name: "Gnome Extensions",
+		category: "🛠️ Linux",
+		iconUrl: "https://cdn.simpleicons.org/gnome/white",
+	},
+
+	// 🎨 Design
+	{
+		name: "Figma",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/figma/white",
+	},
+	{
+		name: "Penpot",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/penpot/white",
+	},
+	{
+		name: "Canva",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/canva/white",
+	},
+	{
+		name: "Inkscape",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/inkscape/white",
+	},
+	{
+		name: "Gimp",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/gimp/white",
+	},
+	{
+		name: "Affinity (el nuevo)",
+		category: "🎨 Design",
+		iconUrl: "https://cdn.simpleicons.org/affinity/white",
+	},
+
+	// 🎬 Multimedia
+	{
+		name: "DaVinci Resolve",
+		category: "🎬 Multimedia",
+		iconUrl: "https://cdn.simpleicons.org/davinciresolve/white",
+	},
+	{
+		name: "Audacity",
+		category: "🎬 Multimedia",
+		iconUrl: "https://cdn.simpleicons.org/audacity/white",
+	},
+
+	// 📊 Productivity
+	{
+		name: "MS365",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/microsoft/white",
+	},
+	{
+		name: "WPS Office",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/googledrive/white",
+	},
+	{
+		name: "Only Office",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/onlyoffice/white",
+	},
+	{
+		name: "Libre Office",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/libreoffice/white",
+	},
+	{
+		name: "Linear",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/linear/white",
+	},
+	{
+		name: "Notion",
+		category: "📊 Productivity",
+		iconUrl: "https://cdn.simpleicons.org/notion/white",
+	},
+
+	// 💻 Platforms
+	{
+		name: "MacOS",
+		category: "💻 Platforms",
+		iconUrl: "https://cdn.simpleicons.org/apple/white",
+	},
+	{
+		name: "Windows",
+		category: "💻 Platforms",
+		iconUrl: "https://cdn.simpleicons.org/windows/white",
+	},
+	{
+		name: "LocalWP",
+		category: "💻 Platforms",
+		iconUrl: "https://cdn.simpleicons.org/wordpress/white",
+	},
+
+	// 🧨 Seguridad
+	{
+		name: "Cloudflare",
+		category: "🧨 Seguridad",
+		iconUrl: "https://cdn.simpleicons.org/cloudflare/white",
+	},
+	{
+		name: "WP Hardening",
+		category: "🧨 Seguridad",
+		iconUrl: "https://cdn.simpleicons.org/wordpress/white",
+	},
+	{
+		name: "WP Scan",
+		category: "🧨 Seguridad",
+		iconUrl: "https://cdn.simpleicons.org/wordpress/white",
+	},
+
+	// 🗂️ Indexación
+	{
+		name: "Google Search Console",
+		category: "🗂️ Indexación",
+		iconUrl: "https://cdn.simpleicons.org/googlesearchconsole/white",
+	},
+	{
+		name: "Bing Webmaster Tools",
+		category: "🗂️ Indexación",
+		iconUrl: "https://cdn.simpleicons.org/bing/white",
+	},
+	{
+		name: "Google Perfil Empresa",
+		category: "🗂️ Indexación",
+		iconUrl: "https://cdn.simpleicons.org/google/white",
+	},
+];
+
+const categories = [...new Set(technologies.map((t) => t.category))];
+---
+
+<section class="technologies-section" id="technologies">
+	<div class="section-container">
+		<h2 class="section-title">Tecnologías</h2>
+
+		<div class="categories-filter">
+			<button class="filter-btn active" data-category="all">Todas</button>
+			{
+				categories.map((category) => (
+					<button class="filter-btn" data-category={category}>
+						{category}
+					</button>
+				))
+			}
+		</div>
+
+		<div class="technologies-grid">
+			{
+				technologies.map((tech) => (
+					<div class="tech-card" data-category={tech.category}>
+						<div class="tech-card-inner">
+							<div class="tech-icon">
+								<img
+									src={tech.iconUrl}
+									alt={`${tech.name} icon`}
+								/>
+							</div>
+							<h3 class="tech-name">{tech.name}</h3>
+							<span class="tech-category">{tech.category}</span>
+						</div>
+						<div class="tech-glow" />
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.technologies-section {
+		position: relative;
+		z-index: 40;
+		padding: 8rem 2rem;
+		background: linear-gradient(
+			180deg,
+			rgba(10, 10, 10, 0.8) 0%,
+			rgba(0, 0, 0, 0.5) 100%
+		);
+	}
+
+	.section-container {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.section-title {
+		font-size: clamp(2.5rem, 5vw, 4rem);
+		font-weight: 300;
+		text-align: center;
+		margin-bottom: 3rem;
+		background: linear-gradient(135deg, #fff, #888);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		position: relative;
+	}
+
+	.section-title::after {
+		content: "";
+		position: absolute;
+		bottom: -1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100px;
+		height: 2px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.5),
+			transparent
+		);
+	}
+
+	.categories-filter {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin-bottom: 4rem;
+		flex-wrap: wrap;
+	}
+
+	.filter-btn {
+		padding: 0.75rem 1.5rem;
+		background: rgba(20, 20, 20, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 25px;
+		color: rgba(255, 255, 255, 0.7);
+		font-family: "Newsreader", serif;
+		font-size: 0.95rem;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		backdrop-filter: blur(10px);
+	}
+
+	.filter-btn:hover {
+		border-color: rgba(255, 255, 255, 0.5);
+		color: rgba(255, 255, 255, 0.9);
+		background: rgba(40, 40, 40, 0.6);
+	}
+
+	.filter-btn.active {
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.5);
+		color: white;
+		box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+	}
+
+	.technologies-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+		gap: 1.5rem;
+	}
+
+	.tech-card {
+		position: relative;
+		background: rgba(20, 20, 20, 0.6);
+		backdrop-filter: blur(10px);
+		border-radius: 16px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 2rem 1rem;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		overflow: hidden;
+		cursor: pointer;
+	}
+
+	.tech-card.hidden {
+		display: none;
+	}
+
+	.tech-card-inner {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.tech-card:hover {
+		transform: translateY(-8px) scale(1.02);
+		border-color: rgba(255, 255, 255, 0.3);
+		box-shadow:
+			0 0 30px rgba(255, 255, 255, 0.15),
+			0 15px 50px rgba(0, 0, 0, 0.5);
+	}
+
+	.tech-glow {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 150%;
+		height: 150%;
+		background: radial-gradient(
+			circle,
+			rgba(255, 255, 255, 0.1) 0%,
+			transparent 70%
+		);
+		transform: translate(-50%, -50%);
+		opacity: 0;
+		transition: opacity 0.4s ease;
+		pointer-events: none;
+	}
+
+	.tech-card:hover .tech-glow {
+		opacity: 1;
+	}
+
+	.tech-icon {
+		width: 64px;
+		height: 64px;
+		margin-bottom: 1rem;
+		filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+		transition: transform 0.3s ease;
+	}
+
+	.tech-icon img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.tech-card:hover .tech-icon {
+		transform: scale(1.1) rotate(5deg);
+	}
+
+	.tech-name {
+		font-size: 1.1rem;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.9);
+		margin-bottom: 0.5rem;
+	}
+
+	.tech-category {
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.5);
+		padding: 0.25rem 0.75rem;
+		background: rgba(255, 255, 255, 0.05);
+		border-radius: 12px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	@media (max-width: 768px) {
+		.technologies-section {
+			padding: 4rem 1.5rem;
+		}
+
+		.technologies-grid {
+			grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+			gap: 1rem;
+		}
+
+		.tech-card {
+			padding: 1.5rem 0.75rem;
+		}
+
+		.tech-icon {
+			width: 48px;
+			height: 48px;
+		}
+
+		.tech-name {
+			font-size: 1rem;
+		}
+
+		.categories-filter {
+			gap: 0.5rem;
+			margin-bottom: 3rem;
+		}
+
+		.filter-btn {
+			padding: 0.5rem 1rem;
+			font-size: 0.85rem;
+		}
+	}
+</style>
+
+<script>
+	// Filter functionality
+	const filterBtns = document.querySelectorAll(".filter-btn");
+	const techCards = document.querySelectorAll(".tech-card");
+
+	filterBtns.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const category = btn.getAttribute("data-category");
+
+			// Update active button
+			filterBtns.forEach((b) => b.classList.remove("active"));
+			btn.classList.add("active");
+
+			// Filter cards
+			techCards.forEach((card) => {
+				if (
+					category === "all" ||
+					card.getAttribute("data-category") === category
+				) {
+					card.classList.remove("hidden");
+				} else {
+					card.classList.add("hidden");
+				}
+			});
+		});
+	});
+</script>

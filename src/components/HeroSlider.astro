@@ -1,0 +1,260 @@
+---
+---
+
+<section class="hero-slider">
+	<div class="slide active" id="slide-1">
+		<canvas class="stars-canvas"></canvas>
+		<h1 class="hero-text">Where dreams become real</h1>
+	</div>
+	<!--  <div class="slide" id="slide-2">
+		<canvas class="matrix-canvas"></canvas>
+		<div class="crt-overlay"></div>
+		<h1 class="hero-text matrix-text">Descubre el país de las maravillas</h1>
+	</div>-->
+	<div class="slider-controls">
+		<button class="slider-dot active" data-slide="0"></button>
+		<button class="slider-dot" data-slide="1"></button>
+	</div>
+</section>
+
+<style>
+	.hero-slider {
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transition: opacity 1s ease-in-out;
+		z-index: 10;
+	}
+
+	.slide.active {
+		opacity: 1;
+		z-index: 20;
+	}
+
+	.stars-canvas,
+	.matrix-canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	.crt-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: repeating-linear-gradient(
+			0deg,
+			rgba(0, 0, 0, 0.15),
+			rgba(0, 0, 0, 0.15) 1px,
+			transparent 1px,
+			transparent 2px
+		);
+		pointer-events: none;
+		animation: crt-flicker 0.15s infinite;
+	}
+
+	@keyframes crt-flicker {
+		0% { opacity: 0.97; }
+		50% { opacity: 1; }
+		100% { opacity: 0.97; }
+	}
+
+	.hero-text {
+		position: relative;
+		z-index: 30;
+		font-family: 'Newsreader', serif;
+		font-size: clamp(2rem, 5vw, 4rem);
+		font-weight: 300;
+		text-align: center;
+		padding: 0 2rem;
+		text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+	}
+
+	.matrix-text {
+		color: #00ff00;
+		text-shadow:
+			0 0 10px rgba(0, 255, 0, 0.8),
+			0 0 20px rgba(0, 255, 0, 0.5),
+			0 0 30px rgba(0, 255, 0, 0.3);
+		font-family: 'Courier New', monospace;
+	}
+
+	.slider-controls {
+		position: absolute;
+		bottom: 40px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		gap: 15px;
+		z-index: 100;
+	}
+
+	.slider-dot {
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.3);
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.slider-dot:hover {
+		background: rgba(255, 255, 255, 0.5);
+		transform: scale(1.2);
+	}
+
+	.slider-dot.active {
+		background: rgba(255, 255, 255, 0.9);
+		box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+	}
+</style>
+
+<script>
+	// Stars animation
+	const starsCanvas = document.querySelector('.stars-canvas') as HTMLCanvasElement;
+	const starsCtx = starsCanvas.getContext('2d')!;
+
+	function initStarsCanvas() {
+		starsCanvas.width = window.innerWidth;
+		starsCanvas.height = window.innerHeight;
+	}
+
+	interface Star {
+		x: number;
+		y: number;
+		radius: number;
+		opacity: number;
+		twinkleSpeed: number;
+	}
+
+	const stars: Star[] = [];
+	const starCount = 200;
+
+	function createStars() {
+		for (let i = 0; i < starCount; i++) {
+			stars.push({
+				x: Math.random() * starsCanvas.width,
+				y: Math.random() * starsCanvas.height,
+				radius: Math.random() * 1.5,
+				opacity: Math.random(),
+				twinkleSpeed: Math.random() * 0.02 + 0.01
+			});
+		}
+	}
+
+	function animateStars() {
+		starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+
+		stars.forEach(star => {
+			starsCtx.beginPath();
+			starsCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+			starsCtx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+			starsCtx.fill();
+
+			star.opacity += star.twinkleSpeed;
+			if (star.opacity > 1 || star.opacity < 0) {
+				star.twinkleSpeed *= -1;
+			}
+		});
+
+		requestAnimationFrame(animateStars);
+	}
+
+	initStarsCanvas();
+	createStars();
+	animateStars();
+
+	// Matrix animation
+	const matrixCanvas = document.querySelector('.matrix-canvas') as HTMLCanvasElement;
+	const matrixCtx = matrixCanvas.getContext('2d')!;
+
+	function initMatrixCanvas() {
+		matrixCanvas.width = window.innerWidth;
+		matrixCanvas.height = window.innerHeight;
+	}
+
+	const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+	const fontSize = 14;
+	let columns = matrixCanvas.width / fontSize;
+	const drops: number[] = [];
+
+	for (let i = 0; i < columns; i++) {
+		drops[i] = Math.random() * -100;
+	}
+
+	function drawMatrix() {
+		matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+		matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+		matrixCtx.fillStyle = '#00ff00';
+		matrixCtx.font = fontSize + 'px monospace';
+
+		for (let i = 0; i < drops.length; i++) {
+			const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+			matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+			if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+				drops[i] = 0;
+			}
+			drops[i]++;
+		}
+	}
+
+	initMatrixCanvas();
+	setInterval(drawMatrix, 50);
+
+	// Slider functionality
+	let currentSlide = 0;
+	const slides = document.querySelectorAll('.slide');
+	const dots = document.querySelectorAll('.slider-dot');
+
+	function showSlide(index: number) {
+		slides.forEach((slide, i) => {
+			slide.classList.toggle('active', i === index);
+		});
+		dots.forEach((dot, i) => {
+			dot.classList.toggle('active', i === index);
+		});
+	}
+
+	function nextSlide() {
+		currentSlide = (currentSlide + 1) % slides.length;
+		showSlide(currentSlide);
+	}
+
+	// Auto-advance slides
+	setInterval(nextSlide, 5000);
+
+	// Manual controls
+	dots.forEach((dot, index) => {
+		dot.addEventListener('click', () => {
+			currentSlide = index;
+			showSlide(currentSlide);
+		});
+	});
+
+	// Resize handler
+	window.addEventListener('resize', () => {
+		initStarsCanvas();
+		initMatrixCanvas();
+		columns = matrixCanvas.width / fontSize;
+	});
+</script>

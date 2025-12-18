@@ -1,0 +1,97 @@
+---
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="JaimeGH Portfolio" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;600&display=swap" rel="stylesheet" />
+		<title>{title}</title>
+	</head>
+	<body>
+		<div class="grid-overlay"></div>
+		<div class="light-cursor"></div>
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	:root {
+		--bg-black: #000000;
+		--text-light: #f5f5f5;
+		--glow-color: rgba(255, 255, 255, 0.6);
+	}
+
+	body {
+		background-color: var(--bg-black);
+		color: var(--text-light);
+		font-family: 'Newsreader', serif;
+		font-weight: 300;
+		overflow-x: hidden;
+		position: relative;
+		min-height: 100vh;
+	}
+
+	/* Grid overlay */
+	.grid-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image:
+			linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+		background-size: 50px 50px;
+		pointer-events: none;
+		z-index: 1;
+	}
+
+	/* Light cursor effect */
+	.light-cursor {
+		position: fixed;
+		width: 600px;
+		height: 600px;
+		border-radius: 50%;
+		background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+		pointer-events: none;
+		z-index: 2;
+		transform: translate(-50%, -50%);
+		transition: opacity 0.3s ease;
+		opacity: 0;
+	}
+
+	@media (pointer: fine) {
+		body:hover .light-cursor {
+			opacity: 1;
+		}
+	}
+</style>
+
+<script>
+	// Light cursor follow mouse
+	document.addEventListener('mousemove', (e) => {
+		const cursor = document.querySelector('.light-cursor') as HTMLElement;
+		if (cursor) {
+			cursor.style.left = e.clientX + 'px';
+			cursor.style.top = e.clientY + 'px';
+		}
+	});
+</script>

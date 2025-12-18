@@ -1,16 +1,35 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import HeroSlider from '../components/HeroSlider.astro';
+import CardsSection from '../components/CardsSection.astro';
+import BlogSection from '../components/BlogSection.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
+import LanguagesSection from '../components/LanguagesSection.astro';
+import TechnologiesSection from '../components/TechnologiesSection.astro';
+import BrandsSection from '../components/BrandsSection.astro';
+import SocialSection from '../components/SocialSection.astro';
+import ContactSection from '../components/ContactSection.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="JaimeGH - Portfolio">
+	<Header />
+	<main>
+		<HeroSlider />
+		<CardsSection />
+		<BlogSection />
+		<ProjectsSection />
+		<LanguagesSection />
+		<TechnologiesSection />
+		<BrandsSection />
+		<SocialSection />
+		<ContactSection />
+	</main>
+</Layout>
+
+<style>
+	main {
+		position: relative;
+		z-index: 10;
+	}
+</style>
