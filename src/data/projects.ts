@@ -20,11 +20,20 @@ export const projects: Project[] = [
   },
   {
     title: 'Ai Cloud',
-    description: 'En beta, dentro de poco.',
-    image: 'https://hosted.inled.es/ainclouddeco.png',
+    description: 'Chatbots de IA para sitios web gratuitos e ilimitados.',
+    image: 'https://hosted.inled.es/aicloud.png',
     technologies: ['Astro', 'JS', 'CSS', 'WebLLM', 'WebGPU', 'WASM', 'WLlama', 'Vercel', 'Supabase', 'Supabase Auth', 'Google Cloud'],
-    demoUrl: null,
+    demoUrl: 'https://aicloud.inled.es',
     githubUrl: null,
+    featured: true
+  },
+  {
+    title: 'Edge AI',
+    description: 'ChatGPT + Perplexity + NotebookLM pero local, sin instalar nada, ilimitado y privado.',
+    image: 'https://hosted.inled.es/edgeai.png',
+    technologies: ['Astro', 'JS', 'CSS', 'WebLLM', 'WebGPU', 'WASM', 'WLlama', 'Vercel'],
+    demoUrl: 'https://edge.inled.es',
+    githubUrl: 'https://github.com/InledGroup/Edge.AI',
     featured: true
   },
   {
