@@ -1,18 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import HeroSlider from '../components/HeroSlider.astro';
-import CardsSection from '../components/CardsSection.astro';
-import BlogSection from '../components/BlogSection.astro';
-import ProjectsSection from '../components/ProjectsSection.astro';
-import LanguagesSection from '../components/LanguagesSection.astro';
-import TechnologiesSection from '../components/TechnologiesSection.astro';
-import BrandsSection from '../components/BrandsSection.astro';
-import SocialSection from '../components/SocialSection.astro';
-import ContactSection from '../components/ContactSection.astro';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import HeroSlider from "../components/HeroSlider.astro";
+import CardsSection from "../components/CardsSection.astro";
+import BlogSection from "../components/BlogSection.astro";
+import ProjectsSection from "../components/ProjectsSection.astro";
+import LanguagesSection from "../components/LanguagesSection.astro";
+import TechnologiesSection from "../components/TechnologiesSection.astro";
+import BrandsSection from "../components/BrandsSection.astro";
+import SocialSection from "../components/SocialSection.astro";
+import ContactSection from "../components/ContactSection.astro";
 ---
 
-<Layout title="JaimeGH | Jaime González Herráiz | Dev & Founder @InledGroup">
+<Layout
+	title="JaimeGH | Jaime González Herráiz | Dev & Founder @InledGroup"
+	description="Hola, soy Jaime González Herráiz. Desarrollador, agentic engineer y fundador de Inled Group y TEA Friendly."
+>
 	<Header />
 	<main>
 		<HeroSlider />
@@ -26,7 +29,6 @@ import ContactSection from '../components/ContactSection.astro';
 		<ContactSection />
 	</main>
 </Layout>
-
 <style>
 	main {
 		position: relative;

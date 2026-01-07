@@ -1,23 +1,63 @@
 ---
 interface Props {
 	title: string;
+	description?: string;
+	image?: string;
+	canonicalURL?: string;
+	type?: string;
 }
 
-const { title } = Astro.props;
+const {
+	title,
+	description = "Hola, soy Jaime González Herráiz. Desarrollador, agentic engineer y fundador de Inled Group y TEA Friendly.",
+	image = "/og-image.png",
+	canonicalURL = new URL(
+		Astro.url.pathname,
+		Astro.site || "https://jaimegh.com",
+	).href,
+	type = "website",
+} = Astro.props;
+
+const siteName = "Jaime González Herráiz | JaimeGH";
+const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="JaimeGH Portfolio" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+
+		<!-- Primary Meta Tags -->
+		<title>{fullTitle}</title>
+		<meta name="title" content={fullTitle} />
+		<meta name="description" content={description} />
+		<meta name="author" content="Jaime González Herráiz" />
+		<link rel="canonical" href={canonicalURL} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content={type} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, Astro.url)} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalURL} />
+		<meta property="twitter:title" content={fullTitle} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;600&display=swap" rel="stylesheet" />
-		<title>{title}</title>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Newsreader:wght@300;400;600&display=swap"
+			rel="stylesheet"
+		/>
 	</head>
 	<body>
 		<div class="grid-overlay"></div>
@@ -42,7 +82,7 @@ const { title } = Astro.props;
 	body {
 		background-color: var(--bg-black);
 		color: var(--text-light);
-		font-family: 'Newsreader', serif;
+		font-family: "Newsreader", serif;
 		font-weight: 300;
 		overflow-x: hidden;
 		position: relative;
@@ -58,7 +98,11 @@ const { title } = Astro.props;
 		height: 100%;
 		background-image:
 			linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-			linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+			linear-gradient(
+				90deg,
+				rgba(255, 255, 255, 0.03) 1px,
+				transparent 1px
+			);
 		background-size: 50px 50px;
 		pointer-events: none;
 		z-index: 1;
@@ -70,7 +114,11 @@ const { title } = Astro.props;
 		width: 600px;
 		height: 600px;
 		border-radius: 50%;
-		background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+		background: radial-gradient(
+			circle,
+			rgba(255, 255, 255, 0.15) 0%,
+			transparent 70%
+		);
 		pointer-events: none;
 		z-index: 2;
 		transform: translate(-50%, -50%);
@@ -87,11 +135,11 @@ const { title } = Astro.props;
 
 <script>
 	// Light cursor follow mouse
-	document.addEventListener('mousemove', (e) => {
-		const cursor = document.querySelector('.light-cursor') as HTMLElement;
+	document.addEventListener("mousemove", (e) => {
+		const cursor = document.querySelector(".light-cursor") as HTMLElement;
 		if (cursor) {
-			cursor.style.left = e.clientX + 'px';
-			cursor.style.top = e.clientY + 'px';
+			cursor.style.left = e.clientX + "px";
+			cursor.style.top = e.clientY + "px";
 		}
 	});
 </script>

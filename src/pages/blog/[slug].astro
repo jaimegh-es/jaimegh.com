@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import { getBlogPosts, getBlogPost, createSlug } from '../../lib/rss';
-import { Calendar, ArrowLeft } from 'lucide-astro';
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { getBlogPosts, getBlogPost, createSlug } from "../../lib/rss";
+import { Calendar, ArrowLeft } from "lucide-astro";
 
 export async function getStaticPaths() {
 	const posts = await getBlogPosts();
@@ -14,14 +14,20 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 
-const date = new Date(post.pubDate).toLocaleDateString('es-ES', {
-	year: 'numeric',
-	month: 'long',
-	day: 'numeric'
+const date = new Date(post.pubDate).toLocaleDateString("es-ES", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
 });
 ---
 
-<Layout title={`${post.title} - JaimeGH`}>
+<Layout
+	title={`${post.title} - JaimeGH`}
+	description={post.contentSnippet
+		? post.contentSnippet.slice(0, 160) + "..."
+		: undefined}
+	type="article"
+>
 	<Header />
 	<main class="blog-post-page">
 		<article class="blog-post">
@@ -169,7 +175,7 @@ const date = new Date(post.pubDate).toLocaleDateString('es-ES', {
 		padding: 0.25rem 0.5rem;
 		border-radius: 4px;
 		font-size: 0.95em;
-		font-family: 'Courier New', monospace;
+		font-family: "Courier New", monospace;
 		color: rgba(255, 255, 255, 0.9);
 	}
 

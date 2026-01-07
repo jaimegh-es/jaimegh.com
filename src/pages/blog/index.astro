@@ -1,50 +1,65 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Header from '../../components/Header.astro';
-import { getBlogPosts, createSlug } from '../../lib/rss';
-import { Calendar, ArrowRight } from 'lucide-astro';
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { getBlogPosts, createSlug } from "../../lib/rss";
+import { Calendar, ArrowRight } from "lucide-astro";
 
 const posts = await getBlogPosts();
 ---
 
-<Layout title="Blog - JaimeGH">
+<Layout
+	title="Blog - JaimeGH"
+	description="Explora artículos sobre desarrollo web, inteligencia artificial, emprendimiento y tecnología en el blog de Jaime González Herráiz."
+>
 	<Header />
 	<main class="blog-page">
 		<div class="blog-header">
 			<h1 class="page-title">Blog</h1>
-			<p class="page-subtitle">Artículos sobre desarrollo, tecnología y más</p>
+			<p class="page-subtitle">
+				Artículos sobre desarrollo, tecnología y más
+			</p>
 		</div>
 
 		<div class="blog-container">
 			<div class="blog-grid">
-				{posts.map(post => {
-					const slug = createSlug(post.title);
-					const date = new Date(post.pubDate).toLocaleDateString('es-ES', {
-						year: 'numeric',
-						month: 'long',
-						day: 'numeric'
-					});
+				{
+					posts.map((post) => {
+						const slug = createSlug(post.title);
+						const date = new Date(post.pubDate).toLocaleDateString(
+							"es-ES",
+							{
+								year: "numeric",
+								month: "long",
+								day: "numeric",
+							},
+						);
 
-					return (
-						<article class="blog-card">
-							<a href={`/blog/${slug}`} class="blog-link">
-								<div class="blog-card-content">
-									<div class="blog-meta">
-										<Calendar size={16} />
-										<time datetime={post.isoDate}>{date}</time>
+						return (
+							<article class="blog-card">
+								<a href={`/blog/${slug}`} class="blog-link">
+									<div class="blog-card-content">
+										<div class="blog-meta">
+											<Calendar size={16} />
+											<time datetime={post.isoDate}>
+												{date}
+											</time>
+										</div>
+										<h3 class="blog-title">{post.title}</h3>
+										<p class="blog-excerpt">
+											{post.contentSnippet.slice(0, 180)}
+											...
+										</p>
+										<div class="blog-read-more">
+											<span>Leer más</span>
+											<ArrowRight size={20} />
+										</div>
 									</div>
-									<h3 class="blog-title">{post.title}</h3>
-									<p class="blog-excerpt">{post.contentSnippet.slice(0, 180)}...</p>
-									<div class="blog-read-more">
-										<span>Leer más</span>
-										<ArrowRight size={20} />
-									</div>
-								</div>
-								<div class="blog-glow"></div>
-							</a>
-						</article>
-					);
-				})}
+									<div class="blog-glow" />
+								</a>
+							</article>
+						);
+					})
+				}
 			</div>
 		</div>
 	</main>
@@ -76,14 +91,19 @@ const posts = await getBlogPosts();
 	}
 
 	.page-title::after {
-		content: '';
+		content: "";
 		position: absolute;
 		bottom: -1rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: 100px;
 		height: 2px;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.5),
+			transparent
+		);
 	}
 
 	.page-subtitle {
@@ -130,13 +150,17 @@ const posts = await getBlogPosts();
 	}
 
 	.blog-card-content::before {
-		content: '';
+		content: "";
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+		background: linear-gradient(
+			135deg,
+			rgba(255, 255, 255, 0.05) 0%,
+			transparent 100%
+		);
 		opacity: 0;
 		transition: opacity 0.4s ease;
 	}
@@ -159,7 +183,11 @@ const posts = await getBlogPosts();
 		left: 50%;
 		width: 150%;
 		height: 150%;
-		background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+		background: radial-gradient(
+			circle,
+			rgba(255, 255, 255, 0.1) 0%,
+			transparent 70%
+		);
 		transform: translate(-50%, -50%);
 		opacity: 0;
 		transition: opacity 0.4s ease;

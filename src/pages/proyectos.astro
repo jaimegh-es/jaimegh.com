@@ -1,52 +1,77 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import { ExternalLink, Github } from 'lucide-astro';
-import { getAllProjects } from '../data/projects';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import { ExternalLink, Github } from "lucide-astro";
+import { getAllProjects } from "../data/projects";
 
 const projects = getAllProjects();
 ---
 
-<Layout title="Proyectos - JaimeGH">
+<Layout
+	title="Proyectos - JaimeGH"
+	description="Una selección de mis mejores proyectos en desarrollo web, software y emprendimiento. Desde aplicaciones SaaS hasta soluciones innovadoras."
+>
 	<Header />
 	<main class="projects-page">
 		<div class="projects-header">
 			<h1 class="page-title">Proyectos</h1>
-			<p class="page-subtitle">Una colección de proyectos que he realizado</p>
+			<p class="page-subtitle">
+				Una colección de proyectos que he realizado
+			</p>
 		</div>
 
 		<div class="projects-container">
 			<div class="projects-grid">
-				{projects.map(project => (
-					<article class="project-card">
-						<div class="project-image-container">
-							<img src={project.image} alt={project.title} class="project-image" />
-							<div class="project-overlay">
-								<div class="project-links">
-									{project.demoUrl && (
-										<a href={project.demoUrl} class="project-link" target="_blank" rel="noopener noreferrer" title="Ver demo">
-											<ExternalLink size={24} />
-										</a>
-									)}
-									{project.githubUrl && (
-										<a href={project.githubUrl} class="project-link" target="_blank" rel="noopener noreferrer" title="Ver código">
-											<Github size={24} />
-										</a>
-									)}
+				{
+					projects.map((project) => (
+						<article class="project-card">
+							<div class="project-image-container">
+								<img
+									src={project.image}
+									alt={project.title}
+									class="project-image"
+								/>
+								<div class="project-overlay">
+									<div class="project-links">
+										{project.demoUrl && (
+											<a
+												href={project.demoUrl}
+												class="project-link"
+												target="_blank"
+												rel="noopener noreferrer"
+												title="Ver demo"
+											>
+												<ExternalLink size={24} />
+											</a>
+										)}
+										{project.githubUrl && (
+											<a
+												href={project.githubUrl}
+												class="project-link"
+												target="_blank"
+												rel="noopener noreferrer"
+												title="Ver código"
+											>
+												<Github size={24} />
+											</a>
+										)}
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="project-content">
-							<h3 class="project-title">{project.title}</h3>
-							<p class="project-description">{project.description}</p>
-							<div class="project-technologies">
-								{project.technologies.map(tech => (
-									<span class="tech-tag">{tech}</span>
-								))}
+							<div class="project-content">
+								<h3 class="project-title">{project.title}</h3>
+								<p class="project-description">
+									{project.description}
+								</p>
+								<div class="project-technologies">
+									{project.technologies.map((tech) => (
+										<span class="tech-tag">{tech}</span>
+									))}
+								</div>
 							</div>
-						</div>
-					</article>
-				))}
+						</article>
+					))
+				}
 			</div>
 		</div>
 	</main>
@@ -78,14 +103,19 @@ const projects = getAllProjects();
 	}
 
 	.page-title::after {
-		content: '';
+		content: "";
 		position: absolute;
 		bottom: -1rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: 100px;
 		height: 2px;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.5),
+			transparent
+		);
 	}
 
 	.page-subtitle {
