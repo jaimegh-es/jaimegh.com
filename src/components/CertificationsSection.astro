@@ -1,0 +1,294 @@
+---
+import { ExternalLink, Calendar, Award } from 'lucide-astro';
+import { getAllCertifications } from '../data/certifications';
+
+const certifications = getAllCertifications();
+---
+
+<section class="certifications-section" id="certifications">
+	<div class="section-container">
+		<h2 class="section-title">Certificaciones</h2>
+		<p class="section-subtitle">Formación y logros académicos</p>
+
+		<div class="certifications-grid">
+			{certifications.map(cert => (
+				<article class="cert-card">
+					<div class="cert-image-container">
+						<div class="cert-image-bg"></div>
+						<img src={cert.image} alt={cert.title} class="cert-image" />
+						<div class="cert-overlay">
+							<a href={cert.url} class="cert-link" target="_blank" rel="noopener noreferrer" title="Ver certificado original">
+								<ExternalLink size={24} />
+							</a>
+						</div>
+					</div>
+					<div class="cert-content">
+						<div class="cert-header">
+							<h3 class="cert-title">{cert.title}</h3>
+							<span class="cert-badge">
+								<Award size={14} />
+								Certificado
+							</span>
+						</div>
+						<p class="cert-issuer">{cert.issuer}</p>
+						
+						<div class="cert-details">
+							<div class="detail-item">
+								<Calendar size={16} />
+								<span>Emitido: {new Date(cert.issueDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+							</div>
+							<div class="detail-item">
+								<span class="id-label">ID:</span>
+								<code class="cert-id">{cert.certificateId}</code>
+							</div>
+						</div>
+
+						<div class="cert-technologies">
+							{cert.technologies.map(tech => (
+								<span class="tech-tag">{tech}</span>
+							))}
+						</div>
+					</div>
+				</article>
+			))}
+		</div>
+	</div>
+</section>
+
+<style>
+	.certifications-section {
+		position: relative;
+		z-index: 40;
+		padding: 8rem 2rem;
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(10, 10, 10, 0.8) 100%);
+	}
+
+	.section-container {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.section-title {
+		font-size: clamp(2.5rem, 5vw, 4rem);
+		font-weight: 300;
+		text-align: center;
+		margin-bottom: 1rem;
+		background: linear-gradient(135deg, #fff, #888);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		position: relative;
+	}
+
+	.section-title::after {
+		content: '';
+		position: absolute;
+		bottom: -1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 100px;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+	}
+
+	.section-subtitle {
+		text-align: center;
+		font-size: 1.2rem;
+		color: rgba(255, 255, 255, 0.6);
+		margin-bottom: 4rem;
+	}
+
+	.certifications-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+		gap: 2.5rem;
+	}
+
+	.cert-card {
+		background: rgba(20, 20, 20, 0.6);
+		backdrop-filter: blur(10px);
+		border-radius: 20px;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		overflow: hidden;
+		transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cert-card:hover {
+		transform: translateY(-10px);
+		border-color: rgba(255, 255, 255, 0.3);
+		box-shadow:
+			0 0 30px rgba(255, 255, 255, 0.1),
+			0 20px 60px rgba(0, 0, 0, 0.5);
+	}
+
+	.cert-image-container {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.02);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cert-image-bg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+	}
+
+	.cert-image {
+		width: 90%;
+		height: 90%;
+		object-fit: contain;
+		transition: transform 0.4s ease;
+		z-index: 1;
+	}
+
+	.cert-card:hover .cert-image {
+		transform: scale(1.05);
+	}
+
+	.cert-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.6);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		z-index: 10;
+	}
+
+	.cert-card:hover .cert-overlay {
+		opacity: 1;
+	}
+
+	.cert-link {
+		width: 50px;
+		height: 50px;
+		background: rgba(255, 255, 255, 0.1);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 50%;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.3s ease;
+		backdrop-filter: blur(10px);
+	}
+
+	.cert-link:hover {
+		background: rgba(255, 255, 255, 0.2);
+		border-color: rgba(255, 255, 255, 0.5);
+		transform: scale(1.1);
+	}
+
+	.cert-content {
+		padding: 2rem;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cert-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 1rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.cert-title {
+		font-size: 1.5rem;
+		font-weight: 400;
+		color: white;
+	}
+
+	.cert-badge {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.7rem;
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 8px;
+		font-size: 0.75rem;
+		color: rgba(255, 255, 255, 0.8);
+		white-space: nowrap;
+	}
+
+	.cert-issuer {
+		font-size: 1.1rem;
+		color: rgba(255, 255, 255, 0.6);
+		margin-bottom: 1.5rem;
+	}
+
+	.cert-details {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin-bottom: 2rem;
+	}
+
+	.detail-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.95rem;
+	}
+
+	.id-label {
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.4);
+	}
+
+	.cert-id {
+		font-family: monospace;
+		background: rgba(255, 255, 255, 0.03);
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.cert-technologies {
+		margin-top: auto;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+
+	.tech-tag {
+		padding: 0.4rem 1rem;
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 20px;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	@media (max-width: 768px) {
+		.certifications-grid {
+			grid-template-columns: 1fr;
+		}
+		
+		.cert-content {
+			padding: 1.5rem;
+		}
+
+		.cert-title {
+			font-size: 1.3rem;
+		}
+	}
+</style>

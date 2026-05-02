@@ -1,22 +1,22 @@
 ---
 import { ExternalLink, Github, ArrowRight } from 'lucide-astro';
-import { getFeaturedProjects } from '../data/projects';
+import { getPersonalProjects } from '../data/personalProjects';
 
-const featuredProjects = await getFeaturedProjects();
+const personalProjects = getPersonalProjects().slice(0, 3); // Show top 3 on home
 ---
 
-<section class="projects-section" id="projects">
+<section class="projects-section" id="personal-projects">
 	<div class="section-container">
-		<h2 class="section-title">Proyectos para Inled</h2>
-		<p class="section-subtitle">Soluciones y servicios desarrollados para mi marca</p>
+		<h2 class="section-title">Proyectos Personales</h2>
+		<p class="section-subtitle">Desarrollos para solucionar necesidades o para experimentar con los límites de la tecnología</p>
 
 		<div class="projects-grid">
-			{featuredProjects.map(project => (
+			{personalProjects.map(project => (
 				<article class="project-card">
 					<div class="project-image-container">
 						<div class="project-image-bg"></div>
 						<img src={project.image} alt={project.title} class="project-image" />
-						<div class="project-type-badge">{project.technologies[0]}</div>
+						<div class="project-type-badge">{project.type}</div>
 						<div class="project-overlay">
 							<div class="project-links">
 								{project.demoUrl && (
@@ -47,7 +47,7 @@ const featuredProjects = await getFeaturedProjects();
 
 		<div class="view-all">
 			<a href="/proyectos" class="view-all-btn">
-				Ver todos los proyectos
+				Ver todos mis proyectos
 				<ArrowRight size={20} />
 			</a>
 		</div>
@@ -59,7 +59,7 @@ const featuredProjects = await getFeaturedProjects();
 		position: relative;
 		z-index: 40;
 		padding: 8rem 2rem;
-		background: linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(10, 10, 10, 0.8) 100%);
+		background: linear-gradient(180deg, rgba(10, 10, 10, 0.8) 0%, rgba(0, 0, 0, 0.5) 100%);
 	}
 
 	.section-container {
@@ -246,8 +246,6 @@ const featuredProjects = await getFeaturedProjects();
 		font-size: 0.85rem;
 		color: rgba(255, 255, 255, 0.8);
 	}
-
-
 
 	.view-all {
 		display: flex;

@@ -3,76 +3,149 @@ import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import { ExternalLink, Github } from "lucide-astro";
 import { getAllProjects } from "../data/projects";
+import { getPersonalProjects } from "../data/personalProjects";
 
-const projects = getAllProjects();
+const inledProjects = await getAllProjects();
+const personalProjects = getPersonalProjects();
 ---
 
 <Layout
 	title="Proyectos - JaimeGH"
-	description="Una selección de mis mejores proyectos en desarrollo web, software y emprendimiento. Desde aplicaciones SaaS hasta soluciones innovadoras."
+	description="Una selección de mis proyectos personales y colaboraciones con Inled. Desde aplicaciones SaaS hasta soluciones innovadoras."
 >
 	<Header />
 	<main class="projects-page">
 		<div class="projects-header">
 			<h1 class="page-title">Proyectos</h1>
 			<p class="page-subtitle">
-				Una colección de proyectos que he realizado
+				Explora mi trabajo personal y mis desarrollos para Inled
 			</p>
 		</div>
 
 		<div class="projects-container">
-			<div class="projects-grid">
-				{
-					projects.map((project) => (
-						<article class="project-card">
-							<div class="project-image-container">
-								<img
-									src={project.image}
-									alt={project.title}
-									class="project-image"
-								/>
-								<div class="project-overlay">
-									<div class="project-links">
-										{project.demoUrl && (
-											<a
-												href={project.demoUrl}
-												class="project-link"
-												target="_blank"
-												rel="noopener noreferrer"
-												title="Ver demo"
-											>
-												<ExternalLink size={24} />
-											</a>
-										)}
-										{project.githubUrl && (
-											<a
-												href={project.githubUrl}
-												class="project-link"
-												target="_blank"
-												rel="noopener noreferrer"
-												title="Ver código"
-											>
-												<Github size={24} />
-											</a>
-										)}
+			<!-- Personal Projects Section -->
+			<section class="projects-section">
+				<h2 class="category-title">Proyectos Personales</h2>
+				<p class="category-subtitle">Desarrollos independientes y experimentos propios</p>
+				<div class="projects-grid">
+					{
+						personalProjects.map((project) => (
+							<article class="project-card">
+								<div class="project-image-container">
+									<div class="project-image-bg"></div>
+									<img
+										src={project.image}
+										alt={project.title}
+										class="project-image"
+									/>
+									<div class="project-type-badge">
+										{project.type}
+									</div>
+									<div class="project-overlay">
+										<div class="project-links">
+											{project.demoUrl && (
+												<a
+													href={project.demoUrl}
+													class="project-link"
+													target="_blank"
+													rel="noopener noreferrer"
+													title="Ver demo"
+												>
+													<ExternalLink size={24} />
+												</a>
+											)}
+											{project.githubUrl && (
+												<a
+													href={project.githubUrl}
+													class="project-link"
+													target="_blank"
+													rel="noopener noreferrer"
+													title="Ver código"
+												>
+													<Github size={24} />
+												</a>
+											)}
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class="project-content">
-								<h3 class="project-title">{project.title}</h3>
-								<p class="project-description">
-									{project.description}
-								</p>
-								<div class="project-technologies">
-									{project.technologies.map((tech) => (
-										<span class="tech-tag">{tech}</span>
-									))}
+								<div class="project-content">
+									<h3 class="project-title">{project.title}</h3>
+									<p class="project-description">
+										{project.description}
+									</p>
+									<div class="project-technologies">
+										{project.technologies.map((tech) => (
+											<span class="tech-tag">{tech}</span>
+										))}
+									</div>
 								</div>
-							</div>
-						</article>
-					))
-				}
-			</div>
+							</article>
+						))
+					}
+				</div>
+			</section>
+
+			<!-- Inled Projects Section -->
+			<section class="projects-section">
+				<h2 class="category-title">Proyectos de Inled</h2>
+				<p class="category-subtitle">Soluciones y servicios desarrollados para mi marca</p>
+				<div class="projects-grid">
+					{
+						inledProjects.map((project) => (
+							<article class="project-card">
+								<div class="project-image-container">
+									<div class="project-image-bg"></div>
+									<img
+										src={project.image}
+										alt={project.title}
+										class="project-image"
+									/>
+									<div class="project-type-badge">
+										{project.technologies[0]}
+									</div>
+									<div class="project-overlay">
+										<div class="project-links">
+											{project.demoUrl && (
+												<a
+													href={project.demoUrl}
+													class="project-link"
+													target="_blank"
+													rel="noopener noreferrer"
+													title="Ver demo"
+												>
+													<ExternalLink size={24} />
+												</a>
+											)}
+											{project.githubUrl && (
+												<a
+													href={project.githubUrl}
+													class="project-link"
+													target="_blank"
+													rel="noopener noreferrer"
+													title="Ver código"
+												>
+													<Github size={24} />
+												</a>
+											)}
+										</div>
+									</div>
+								</div>
+								<div class="project-content">
+									<h3 class="project-title">{project.title}</h3>
+									<p class="project-description">
+										{project.description}
+									</p>
+									<div class="project-technologies">
+										{project.technologies.map((tech) => (
+											<span class="tech-tag">{tech}</span>
+										))}
+									</div>
+								</div>
+							</article>
+						))
+					}
+				</div>
+			</section>
 		</div>
 	</main>
 </Layout>
@@ -87,8 +160,27 @@ const projects = getAllProjects();
 
 	.projects-header {
 		max-width: 1400px;
-		margin: 0 auto 4rem;
+		margin: 0 auto 6rem;
 		text-align: center;
+	}
+
+	.category-title {
+		font-size: 2.5rem;
+		font-weight: 300;
+		color: #fff;
+		margin-bottom: 0.5rem;
+		text-align: left;
+	}
+
+	.category-subtitle {
+		font-size: 1.1rem;
+		color: rgba(255, 255, 255, 0.5);
+		margin-bottom: 3rem;
+		text-align: left;
+	}
+
+	.projects-section {
+		margin-bottom: 8rem;
 	}
 
 	.page-title {
@@ -157,13 +249,44 @@ const projects = getAllProjects();
 		width: 100%;
 		aspect-ratio: 16 / 10;
 		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.02);
+	}
+
+	.project-image-bg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
 	}
 
 	.project-image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
+		width: 80%;
+		height: 80%;
+		object-fit: contain;
 		transition: transform 0.4s ease;
+		z-index: 1;
+	}
+
+	.project-type-badge {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		padding: 0.4rem 0.8rem;
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(5px);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 8px;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: white;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		z-index: 2;
 	}
 
 	.project-card:hover .project-image {
@@ -182,6 +305,7 @@ const projects = getAllProjects();
 		justify-content: center;
 		opacity: 0;
 		transition: opacity 0.3s ease;
+		z-index: 10;
 	}
 
 	.project-card:hover .project-overlay {
