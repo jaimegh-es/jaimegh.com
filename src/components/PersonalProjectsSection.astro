@@ -2,7 +2,7 @@
 import { ExternalLink, Github, ArrowRight } from 'lucide-astro';
 import { getPersonalProjects } from '../data/personalProjects';
 
-const personalProjects = getPersonalProjects().slice(0, 3); // Show top 3 on home
+const personalProjects = getPersonalProjects().filter(project => project.featured); // Show featured projects on home
 ---
 
 <section class="projects-section" id="personal-projects">
