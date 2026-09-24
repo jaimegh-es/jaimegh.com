@@ -1,0 +1,14 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Home from "../../components/Home.astro";
+
+const lang = "en" as const;
+---
+
+<Layout
+	title="JaimeGH | Jaime González Herráiz"
+	description="Hi, I'm Jaime González Herráiz. Developer and agentic engineer, founder of Inled Group and TEA Friendly."
+	lang={lang}
+>
+	<Home lang={lang} />
+</Layout>

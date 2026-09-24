@@ -1,41 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import HeroSlider from "../components/HeroSlider.astro";
-import CardsSection from "../components/CardsSection.astro";
-import BlogSection from "../components/BlogSection.astro";
-import PersonalProjectsSection from "../components/PersonalProjectsSection.astro";
-import ProjectsSection from "../components/ProjectsSection.astro";
-import CertificationsSection from "../components/CertificationsSection.astro";
-import LanguagesSection from "../components/LanguagesSection.astro";
-import TechnologiesSection from "../components/TechnologiesSection.astro";
-import BrandsSection from "../components/BrandsSection.astro";
-import SocialSection from "../components/SocialSection.astro";
-import ContactSection from "../components/ContactSection.astro";
+import Home from "../components/Home.astro";
+
+const lang = "es" as const;
 ---
 
 <Layout
-	title="JaimeGH | Jaime González Herráiz | Dev & Founder @InledGroup"
-	description="Hola, soy Jaime González Herráiz. Desarrollador, agentic engineer y fundador de Inled Group y TEA Friendly."
+	title="JaimeGH | Jaime González Herráiz"
+	description="Hola, soy Jaime González Herráiz. Desarrollador y agentic engineer, fundador de Inled Group y TEA Friendly."
+	lang={lang}
 >
-	<Header />
-	<main>
-		<HeroSlider />
-		<CardsSection />
-		<BlogSection />
-		<PersonalProjectsSection />
-		<ProjectsSection />
-		<CertificationsSection />
-		<LanguagesSection />
-		<TechnologiesSection />
-		<BrandsSection />
-		<SocialSection />
-		<ContactSection />
-	</main>
+	<Home lang={lang} />
 </Layout>
-<style>
-	main {
-		position: relative;
-		z-index: 10;
-	}
-</style>

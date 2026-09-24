@@ -33,9 +33,3 @@ export async function getAllProjects(): Promise<Project[]> {
     return [];
   }
 }
-
-export async function getFeaturedProjects(): Promise<Project[]> {
-  const allProjects = await getAllProjects();
-  // Show top 9 projects (3 rows of 3) on the home page
-  return allProjects.slice(0, 9);
-}

@@ -1,0 +1,606 @@
+---
+import { Mail, Github, Linkedin, ArrowRight, MessageCircle, Send } from "lucide-astro";
+import ProjectLinks from "./ProjectLinks.astro";
+import { getPersonalProjects } from "../data/personalProjects";
+import { getAllProjects } from "../data/projects";
+import { getBlogPosts, createSlug } from "../lib/rss";
+
+interface Props {
+	lang: "es" | "en";
+}
+
+const { lang } = Astro.props;
+
+const t = {
+	es: {
+		otherLang: "EN",
+		otherLangUrl: "/en",
+		tagline:
+			"Hola, soy JaimeGH, desarrollador fullstack y linux. Friki del sector :)",
+		blog: "Blog",
+		blogSub: "Artículos sobre desarrollo, tecnología y más",
+		readMore: "Leer más",
+		featured: "Destacados",
+		personal: "Proyectos personales",
+		inled: "Proyectos de Inled",
+		inledSub: "Soluciones y servicios desarrollados para mi marca",
+		demo: "Demo",
+		code: "Código",
+	},
+	en: {
+		otherLang: "ES",
+		otherLangUrl: "/",
+		tagline:
+			"Hello, I'm JaimeGH, fullstack and linux developer. Industry geek :)",
+		blog: "Blog",
+		blogSub: "Articles about development, technology and more",
+		readMore: "Read more",
+		featured: "Featured",
+		personal: "Personal projects",
+		inled: "Inled projects",
+		inledSub: "Solutions and services built for my brand",
+		demo: "Demo",
+		code: "Code",
+	},
+}[lang];
+
+const avatar = "https://avatars.githubusercontent.com/u/200265524?v=4";
+const year = new Date().getFullYear();
+
+const personalProjects = getPersonalProjects();
+const featuredProjects = personalProjects.filter((p) => p.featured);
+const inledProjects = await getAllProjects();
+const posts = (await getBlogPosts()).slice(0, 4);
+
+const contact = [
+	{
+		label: "Email",
+		value: "contacto@inled.es",
+		href: "mailto:contacto@inled.es",
+		Icon: Mail,
+	},
+	{
+		label: "GitHub",
+		value: "@jaimegh-es",
+		href: "https://github.com/jaimegh-es",
+		Icon: Github,
+	},
+	{
+		label: "LinkedIn",
+		value: "Jaime González Herráiz",
+		href: "https://es.linkedin.com/in/jaimegonzalezherraiz",
+		Icon: Linkedin,
+	},
+	{
+		label: "Discord",
+		value: "link.inled.es/discord",
+		href: "https://link.inled.es/discord",
+		Icon: MessageCircle,
+	},
+	{
+		label: "Telegram",
+		value: "link.inled.es/telegram",
+		href: "https://link.inled.es/telegram",
+		Icon: Send,
+	},
+];
+
+const dateLocale = lang === "es" ? "es-ES" : "en-US";
+
+function formatDate(date: string) {
+	return new Date(date).toLocaleDateString(dateLocale, {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+}
+
+function desc(p: { description: string; descriptionEn?: string }) {
+	return lang === "en" ? (p.descriptionEn ?? p.description) : p.description;
+}
+---
+
+<main class="page">
+	<!-- Encabezado: foto, nombre, descripción y contacto -->
+	<header class="hero">
+		<img class="avatar" src={avatar} alt="Foto de Jaime González Herráiz" />
+		<h1 class="name">Jaime González Herráiz</h1>
+		<a class="lang-switch" href={t.otherLangUrl}>{t.otherLang}</a>
+		<p class="tagline">{t.tagline}</p>
+
+		<div class="contact">
+			{contact.map(({ label, value, href, Icon }) => (
+				<a class="contact-link" href={href} target="_blank" rel="noopener noreferrer">
+					<Icon size={15} />
+					<span>
+						{label}: <strong>{value}</strong>
+					</span>
+				</a>
+			))}
+		</div>
+	</header>
+
+	<!-- Blog -->
+	<section class="section">
+		<h2 class="section-title">{t.blog}</h2>
+		<div class="list">
+			{posts.map((post) => (
+				<a class="item blog-item" href={`/blog/${createSlug(post.title)}`}>
+					<div class="item-head">
+						<h3 class="item-title">{post.title}</h3>
+						<span class="item-date">{formatDate(post.pubDate)}</span>
+					</div>
+					<div class="blog-more">
+						{t.readMore} <ArrowRight size={14} />
+					</div>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<!-- Destacados -->
+	<section class="section">
+		<h2 class="section-title">{t.featured}</h2>
+		<div class="cards">
+			{featuredProjects.map((p) => (
+				<article class="card">
+					<div class="thumb">
+						<img src={p.image} alt={p.title} loading="lazy" />
+					</div>
+					<div class="card-body">
+						<h3 class="card-title">{p.title}</h3>
+						<p class="card-desc">{desc(p)}</p>
+						<div class="card-links">
+							<ProjectLinks
+								demoUrl={p.demoUrl}
+								githubUrl={p.githubUrl}
+								demoLabel={t.demo}
+								codeLabel={t.code}
+							/>
+						</div>
+					</div>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<!-- Proyectos personales -->
+	<section class="section">
+		<h2 class="section-title">{t.personal}</h2>
+		<div class="list">
+			{personalProjects.map((p) => (
+				<article class="item">
+					<div class="item-thumb">
+						<img src={p.image} alt={p.title} loading="lazy" />
+					</div>
+					<div class="item-body">
+						<div class="item-head">
+							<h3 class="item-title">{p.title}</h3>
+							<div class="item-links">
+								<ProjectLinks
+									demoUrl={p.demoUrl}
+									githubUrl={p.githubUrl}
+									demoLabel={t.demo}
+									codeLabel={t.code}
+								/>
+							</div>
+						</div>
+						<p class="item-desc">{desc(p)}</p>
+						<div class="tags">
+							{p.technologies.map((tech) => (
+								<span class="tag">{tech}</span>
+							))}
+						</div>
+					</div>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<!-- Proyectos de Inled -->
+	<section class="section">
+		<h2 class="section-title">{t.inled}</h2>
+		<p class="section-subtitle">{t.inledSub}</p>
+		<div class="list">
+			{inledProjects.map((p) => (
+				<article class="item">
+					<div class="item-thumb">
+						<img src={p.image} alt={p.title} loading="lazy" />
+					</div>
+					<div class="item-body">
+						<div class="item-head">
+							<h3 class="item-title">{p.title}</h3>
+							<div class="item-links">
+								<ProjectLinks
+									demoUrl={p.demoUrl}
+									githubUrl={p.githubUrl}
+									demoLabel={t.demo}
+									codeLabel={t.code}
+								/>
+							</div>
+						</div>
+						<p class="item-desc">{p.description}</p>
+						<div class="tags">
+							{p.technologies.map((tech) => (
+								<span class="tag">{tech}</span>
+							))}
+						</div>
+					</div>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<footer class="footer">
+		<p>© {year} Jaime González Herráiz</p>
+	</footer>
+</main>
+
+<style>
+	.page {
+		position: relative;
+		z-index: 10;
+		max-width: 680px;
+		margin: 0 auto;
+		padding: 5rem 1.5rem 4rem;
+	}
+
+	/* ---- Hero ---- */
+	.hero {
+		text-align: center;
+		margin-bottom: 5rem;
+		position: relative;
+	}
+
+	.avatar {
+		width: 110px;
+		height: 110px;
+		border-radius: 50%;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+		margin-bottom: 1.25rem;
+	}
+
+	.name {
+		font-size: clamp(2.2rem, 6vw, 3.2rem);
+		font-weight: 300;
+		background: linear-gradient(135deg, #fff, #888);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin-bottom: 0.75rem;
+	}
+
+	.lang-switch {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 0.4rem 0.9rem;
+		color: rgba(255, 255, 255, 0.7);
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 999px;
+		text-decoration: none;
+		font-size: 0.85rem;
+		transition: all 0.25s ease;
+	}
+
+	.lang-switch:hover {
+		color: white;
+		border-color: rgba(255, 255, 255, 0.4);
+	}
+
+	.tagline {
+		color: rgba(255, 255, 255, 0.65);
+		font-size: 1.15rem;
+		line-height: 1.7;
+		max-width: 56ch;
+		margin: 0 auto 2.5rem;
+	}
+
+	.contact {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+
+	.contact-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.55rem 1rem;
+		color: rgba(255, 255, 255, 0.8);
+		background: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 999px;
+		text-decoration: none;
+		font-size: 0.9rem;
+		transition: all 0.25s ease;
+	}
+
+	.contact-link strong {
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.contact-link:hover {
+		border-color: rgba(255, 255, 255, 0.4);
+		background: rgba(255, 255, 255, 0.08);
+		transform: translateY(-2px);
+	}
+
+	/* ---- Secciones ---- */
+	.section {
+		margin-bottom: 5rem;
+	}
+
+	.section-title {
+		font-size: 1.6rem;
+		font-weight: 300;
+		margin-bottom: 2rem;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.section-subtitle {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 1rem;
+		margin-top: -1.25rem;
+		margin-bottom: 2rem;
+	}
+
+	/* ---- Cards (destacados) ---- */
+	.cards {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.card {
+		display: flex;
+		background: rgba(20, 20, 20, 0.5);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 14px;
+		overflow: hidden;
+		transition: border-color 0.3s ease;
+	}
+
+	.card:hover {
+		border-color: rgba(255, 255, 255, 0.3);
+	}
+
+	.thumb {
+		width: 112px;
+		flex-shrink: 0;
+		align-self: stretch;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: radial-gradient(
+			circle at center,
+			rgba(255, 255, 255, 0.08) 0%,
+			rgba(255, 255, 255, 0.02) 60%,
+			transparent 100%
+		);
+		border-right: 1px solid rgba(255, 255, 255, 0.08);
+		padding: 1rem;
+	}
+
+	.thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+	}
+
+	.card-body {
+		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		padding: 1.1rem 1.25rem;
+	}
+
+	.card-title {
+		font-size: 1.1rem;
+		font-weight: 400;
+		margin-bottom: 0.4rem;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.card-desc {
+		color: rgba(255, 255, 255, 0.7);
+		line-height: 1.5;
+		font-size: 0.92rem;
+		white-space: pre-line;
+		margin-bottom: 0.75rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.card-links {
+		display: flex;
+		gap: 1.25rem;
+	}
+
+	.card-links a,
+	.item-links a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		font-size: 0.95rem;
+		transition: color 0.2s ease;
+	}
+
+	.card-links a:hover,
+	.item-links a:hover {
+		color: white;
+	}
+
+	/* ---- Listas ---- */
+	.list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.item {
+		display: flex;
+		gap: 1rem;
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		border-radius: 14px;
+		padding: 1rem 1.25rem;
+		background: rgba(20, 20, 20, 0.45);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+		transition: border-color 0.3s ease;
+	}
+
+	.item:hover {
+		border-color: rgba(255, 255, 255, 0.25);
+	}
+
+	.item-thumb {
+		width: 56px;
+		height: 56px;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255, 255, 255, 0.03);
+		border-radius: 10px;
+		padding: 0.5rem;
+	}
+
+	.item-thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.item-body {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.item-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		margin-bottom: 0.4rem;
+	}
+
+	.item-title {
+		font-size: 1.15rem;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.item-links {
+		display: flex;
+		gap: 1rem;
+		white-space: nowrap;
+	}
+
+	.item-links a {
+		font-size: 0.9rem;
+	}
+
+	.item-date {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+
+	.item-desc {
+		color: rgba(255, 255, 255, 0.6);
+		font-size: 0.95rem;
+		line-height: 1.6;
+		white-space: pre-line;
+		margin-bottom: 0.85rem;
+	}
+
+	.blog-item {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.blog-item .item-head {
+		margin-bottom: 0;
+	}
+
+	.blog-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 0.95rem;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.tag {
+		padding: 0.25rem 0.8rem;
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 999px;
+		font-size: 0.8rem;
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	/* ---- Footer ---- */
+	.footer {
+		margin-top: 5rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		text-align: center;
+		color: rgba(255, 255, 255, 0.4);
+		font-size: 0.9rem;
+	}
+
+	@media (max-width: 560px) {
+		.item-head {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 0.6rem;
+		}
+
+		.item-links {
+			white-space: normal;
+		}
+
+		.card-links,
+		.item-links {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0.5rem;
+			width: 100%;
+		}
+
+		.card-links a,
+		.item-links a {
+			justify-content: center;
+			padding: 0.9rem 1rem;
+			gap: 0.5rem;
+			font-size: 1.05rem;
+			background: rgba(255, 255, 255, 0.06);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			border-radius: 12px;
+		}
+	}
+</style>

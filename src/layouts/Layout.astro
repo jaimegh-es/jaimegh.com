@@ -5,17 +5,19 @@ interface Props {
 	image?: string;
 	canonicalURL?: string;
 	type?: string;
+	lang?: "es" | "en";
 }
 
 const {
 	title,
-	description = "Hola, soy Jaime González Herráiz. Desarrollador, agentic engineer y fundador de Inled Group y TEA Friendly.",
+	description = "Hola, soy JaimeGH, desarrollador fullstack y linux. Friki del sector :)",
 	image = "/og-image.png",
 	canonicalURL = new URL(
 		Astro.url.pathname,
 		Astro.site || "https://jaimegh.com",
 	).href,
 	type = "website",
+	lang = "es",
 } = Astro.props;
 
 const siteName = "Jaime González Herráiz | JaimeGH";
@@ -23,7 +25,7 @@ const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -61,7 +63,6 @@ const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 	</head>
 	<body>
 		<div class="grid-overlay"></div>
-		<div class="light-cursor"></div>
 		<slot />
 	</body>
 </html>
@@ -89,6 +90,11 @@ const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 		min-height: 100vh;
 	}
 
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+
 	/* Grid overlay */
 	.grid-overlay {
 		position: fixed;
@@ -107,39 +113,4 @@ const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 		pointer-events: none;
 		z-index: 1;
 	}
-
-	/* Light cursor effect */
-	.light-cursor {
-		position: fixed;
-		width: 600px;
-		height: 600px;
-		border-radius: 50%;
-		background: radial-gradient(
-			circle,
-			rgba(255, 255, 255, 0.15) 0%,
-			transparent 70%
-		);
-		pointer-events: none;
-		z-index: 2;
-		transform: translate(-50%, -50%);
-		transition: opacity 0.3s ease;
-		opacity: 0;
-	}
-
-	@media (pointer: fine) {
-		body:hover .light-cursor {
-			opacity: 1;
-		}
-	}
 </style>
-
-<script>
-	// Light cursor follow mouse
-	document.addEventListener("mousemove", (e) => {
-		const cursor = document.querySelector(".light-cursor") as HTMLElement;
-		if (cursor) {
-			cursor.style.left = e.clientX + "px";
-			cursor.style.top = e.clientY + "px";
-		}
-	});
-</script>
