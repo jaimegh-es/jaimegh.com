@@ -1,8 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/Header.astro";
+import MobileIsland from "../../components/MobileIsland.astro";
 import { getBlogPosts, getBlogPost, createSlug } from "../../lib/rss";
-import { Calendar, ArrowLeft } from "lucide-astro";
+import { ArrowLeft } from "lucide-astro";
 
 export async function getStaticPaths() {
 	const posts = await getBlogPosts();
@@ -19,6 +19,16 @@ const date = new Date(post.pubDate).toLocaleDateString("es-ES", {
 	month: "long",
 	day: "numeric",
 });
+
+// Limpieza del HTML de Blogger: sin párrafos vacíos ni <br> encadenados,
+// y las fotos a resolución completa en vez de miniatura s320.
+const content = post.content
+	.replace(/<p>(?:\s|&nbsp;|<br\s*\/?>)*<\/p>/gi, "")
+	.replace(/<\/p>(\s*<br\s*\/?>)+/gi, "</p>")
+	.replace(/(<br\s*\/?>\s*){2,}/gi, "<br />")
+	.replace(/<p>&nbsp;+/g, "<p>")
+	.replace(/\/s\d+\//g, "/s1600/")
+	.trim();
 ---
 
 <Layout
@@ -28,90 +38,98 @@ const date = new Date(post.pubDate).toLocaleDateString("es-ES", {
 		: undefined}
 	type="article"
 >
-	<Header />
-	<main class="blog-post-page">
-		<article class="blog-post">
-			<div class="post-header">
-				<a href="/blog" class="back-link">
-					<ArrowLeft size={20} />
-					Volver al inicio
+	<main class="page">
+		<div class="frame">
+			<!-- Barra superior -->
+			<div class="topbar">
+				<a class="back" href="/blog">
+					<ArrowLeft size={14} strokeWidth={1.5} />
+					Blog
 				</a>
-				<div class="post-meta">
-					<Calendar size={18} />
-					<time datetime={post.isoDate}>{date}</time>
-				</div>
-				<h1 class="post-title">{post.title}</h1>
+				<a class="back" href="/">
+					<ArrowLeft size={14} strokeWidth={1.5} />
+					JaimeGH
+				</a>
 			</div>
 
-			<div class="post-content" set:html={post.content} />
-		</article>
+			<!-- Cabecera de la entrada -->
+			<header class="cell post-head">
+				<time class="post-date" datetime={post.isoDate}>{date}</time>
+				<h1 class="post-title">{post.title}</h1>
+			</header>
+
+			<!-- Contenido -->
+			<article class="cell post-content" set:html={content} />
+
+			<!-- Footer -->
+			<footer class="footer">
+				<span>© {new Date().getFullYear()} Jaime González Herráiz</span>
+				<a class="footer-blog" href="/blog">
+					<ArrowLeft size={13} strokeWidth={1.5} />
+					Todas las entradas
+				</a>
+			</footer>
+		</div>
 	</main>
+	<MobileIsland />
 </Layout>
 
 <style is:global>
-	.blog-post-page {
-		position: relative;
-		z-index: 40;
-		min-height: 100vh;
-		padding: 12rem 2rem 6rem;
+	/* ---- Barra superior ---- */
+	.topbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.7rem 1.1rem;
+		border-bottom: 1px solid var(--line);
 	}
 
-	.blog-post {
-		max-width: 900px;
-		margin: 0 auto;
-		background: rgba(20, 20, 20, 0.6);
-		backdrop-filter: blur(10px);
-		border-radius: 20px;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 3rem;
-		box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
-	}
-
-	.post-header {
-		margin-bottom: 3rem;
-		padding-bottom: 2rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-	}
-
-	.back-link {
+	.back {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--muted);
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		color: rgba(255, 255, 255, 0.7);
-		text-decoration: none;
-		font-size: 1rem;
-		margin-bottom: 1.5rem;
-		transition: all 0.3s ease;
+		gap: 0.45rem;
+		transition: color 0.15s ease;
 	}
 
-	.back-link:hover {
-		color: rgba(255, 255, 255, 1);
-		gap: 0.75rem;
+	.back:hover {
+		color: var(--fg);
 	}
 
-	.post-meta {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		color: rgba(255, 255, 255, 0.5);
-		font-size: 1rem;
-		margin-bottom: 1.5rem;
+	/* ---- Cabecera ---- */
+	.post-head {
+		padding: 2rem 1.6rem;
+	}
+
+	.post-date {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--muted);
+		margin-bottom: 0.9rem;
 	}
 
 	.post-title {
-		font-size: clamp(2rem, 4vw, 3rem);
-		font-weight: 300;
-		line-height: 1.3;
-		background: linear-gradient(135deg, #fff, #aaa);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
+		font-size: clamp(1.7rem, 5vw, 2.4rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.2;
 	}
 
+	/* ---- Contenido (HTML inyectado del feed) ---- */
 	.post-content {
+		padding: 2rem 1.6rem;
+		border-top: 1px solid var(--line);
 		color: rgba(255, 255, 255, 0.85);
-		line-height: 1.8;
-		font-size: 1.1rem;
+		line-height: 1.75;
+		font-size: 1.02rem;
+		overflow-wrap: break-word;
 	}
 
 	.post-content h1,
@@ -120,127 +138,198 @@ const date = new Date(post.pubDate).toLocaleDateString("es-ES", {
 	.post-content h4,
 	.post-content h5,
 	.post-content h6 {
-		color: rgba(255, 255, 255, 0.95);
+		color: var(--fg);
 		margin-top: 2rem;
-		margin-bottom: 1rem;
-		font-weight: 400;
+		margin-bottom: 0.9rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+	}
+
+	.post-content h1 {
+		font-size: 1.7rem;
 	}
 
 	.post-content h2 {
-		font-size: 2rem;
-		padding-top: 1rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
+		font-size: 1.45rem;
+		padding-top: 1.4rem;
+		border-top: 1px solid var(--line);
 	}
 
 	.post-content h3 {
-		font-size: 1.5rem;
+		font-size: 1.2rem;
 	}
 
 	.post-content p {
-		margin-bottom: 1.5rem;
+		margin-bottom: 1.3rem;
+	}
+
+	.post-content p:last-child {
+		margin-bottom: 0;
 	}
 
 	.post-content a {
-		color: rgba(255, 255, 255, 0.9);
+		color: var(--fg);
 		text-decoration: underline;
 		text-underline-offset: 3px;
-		transition: all 0.3s ease;
+		text-decoration-color: var(--line-strong);
+		transition: text-decoration-color 0.15s ease;
 	}
 
 	.post-content a:hover {
-		color: white;
-		text-decoration-color: rgba(255, 255, 255, 0.5);
+		text-decoration-color: var(--fg);
 	}
 
 	.post-content img {
 		max-width: 100%;
 		height: auto;
-		border-radius: 12px;
-		margin: 2rem 0;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		display: block;
+		margin: 1.6rem 0;
+		border: 1px solid var(--line);
+	}
+
+	/* Imágenes en bloque del feed (.separator de Blogger): a ancho completo */
+	.post-content .separator {
+		text-align: center;
+	}
+
+	.post-content .separator a {
+		display: block;
+		margin: 1.6rem 0 !important;
+	}
+
+	.post-content .separator img {
+		width: 100%;
+		margin: 0;
+	}
+
+	.post-content figure {
+		margin: 1.6rem 0;
+	}
+
+	.post-content figcaption {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--muted);
+		margin-top: 0.5rem;
 	}
 
 	.post-content ul,
 	.post-content ol {
-		margin-left: 2rem;
-		margin-bottom: 1.5rem;
+		margin-left: 1.5rem;
+		margin-bottom: 1.3rem;
 	}
 
 	.post-content li {
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.post-content strong {
+		color: var(--fg);
+		font-weight: 600;
+	}
+
+	.post-content blockquote {
+		border-left: 1px solid var(--line-strong);
+		padding-left: 1.2rem;
+		margin: 1.6rem 0;
+		color: var(--muted);
+		font-style: italic;
 	}
 
 	.post-content code {
-		background: rgba(0, 0, 0, 0.4);
-		padding: 0.25rem 0.5rem;
-		border-radius: 4px;
-		font-size: 0.95em;
-		font-family: "Courier New", monospace;
-		color: rgba(255, 255, 255, 0.9);
+		font-family: var(--font-mono);
+		font-size: 0.88em;
+		background: rgba(255, 255, 255, 0.06);
+		padding: 0.15rem 0.4rem;
+		border: 1px solid var(--line);
+		color: var(--fg);
 	}
 
 	.post-content pre {
-		background: rgba(0, 0, 0, 0.6);
-		padding: 1.5rem;
-		border-radius: 12px;
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+		background: #000;
+		padding: 1.2rem;
 		overflow-x: auto;
-		margin: 2rem 0;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		margin: 1.6rem 0;
+		border: 1px solid var(--line);
+		line-height: 1.6;
 	}
 
 	.post-content pre code {
 		background: transparent;
 		padding: 0;
-	}
-
-	.post-content blockquote {
-		border-left: 3px solid rgba(255, 255, 255, 0.3);
-		padding-left: 1.5rem;
-		margin: 2rem 0;
-		color: rgba(255, 255, 255, 0.7);
-		font-style: italic;
+		border: none;
 	}
 
 	.post-content table {
 		width: 100%;
 		border-collapse: collapse;
-		margin: 2rem 0;
+		margin: 1.6rem 0;
+		font-size: 0.92rem;
 	}
 
 	.post-content th,
 	.post-content td {
-		padding: 0.75rem;
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		padding: 0.65rem 0.75rem;
+		border: 1px solid var(--line);
+		text-align: left;
 	}
 
 	.post-content th {
 		background: rgba(255, 255, 255, 0.05);
-		font-weight: 400;
+		font-weight: 500;
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	@media (max-width: 768px) {
-		.blog-post-page {
-			padding: 10rem 1.5rem 4rem;
-		}
+	.post-content hr {
+		border: none;
+		border-top: 1px solid var(--line);
+		margin: 2rem 0;
+	}
 
-		.blog-post {
-			padding: 2rem 1.5rem;
-		}
+	/* ---- Footer ---- */
+	.footer {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.9rem 1.1rem;
+		border-top: 1px solid var(--line);
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: var(--muted);
+	}
 
-		.post-title {
-			font-size: 1.8rem;
+	.footer-blog {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		transition: color 0.15s ease;
+	}
+
+	.footer-blog:hover {
+		color: var(--fg);
+	}
+
+	/* ---- Mobile ---- */
+	@media (max-width: 640px) {
+		.post-head,
+		.post-content {
+			padding: 1.4rem 1.1rem;
 		}
 
 		.post-content {
 			font-size: 1rem;
 		}
 
-		.post-content h2 {
-			font-size: 1.6rem;
-		}
-
-		.post-content h3 {
-			font-size: 1.3rem;
+		.footer {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
 		}
 	}
 </style>

@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Pulsar OS",
+    "description": "El conjunto de distribuciones Linux que reemplazarán tu Mac, Windows y AndroidTV. Featured on Distrowatch",
+    "descriptionEn": "The set of Linux distributions that will replace your Mac, Windows and AndroidTV. Featured on Distrowatch",
+    "image": "https://hosted.inled.es/cdn/pulsar-logo-simple-sf.png",
+    "technologies": ["Android", "APK", "APIs", "Astro", "Capacitor", "Java"],
+    "type": "Open Source",
+    "demoUrl": "https://os.inled.es",
+    "githubUrl": "https://github.com/Inled-Pulsar_OS"
+  },
+  {
+    "title": "Seafari",
+    "description": "Safari pero para Linux y sobre Firefox sin recompilar con parcheo de omni.ja desde Gh actions. Innovación a tope.",
+    "descriptionEn": "Safari but for Linux and built on top of Firefox without recompiling with omni.ja patch from Gh actions. Innovation at the top.",
+    "image": "https://hosted.inled.es/cdn/seafari.png",
+    "technologies": ["Browser", "Linux", "Omni.ja", "GH Actions"],
+    "type": "Inled",
+    "demoUrl": "https://inled.es/apps/seafari",
+    "githubUrl": "https://github.com/InledGroup/seafari"
+  },
+    {
+    "title": "Codexbar for GNOME",
+    "description": "Extension de GNOME como UI para Codexbar CLI by steipete, featured en el repo oficial de Codexbar",
+    "descriptionEn": "GNOME extension as UI for Codexbar CLI by steipete, featured in the official Codexbar repo",
+    "image": "https://hosted.inled.es/cdn/codexbar-logo.png",
+    "technologies": ["GJS", "GNOME Shell"],
+    "type": "Inled",
+    "demoUrl": "https://inled.es/apps/codexbar-gnome",
+    "githubUrl": "https://github.com/InledGroup/codexbar-gnome"
+  },
+  {
+    "title": "Web instituto",
+    "description": "Con el afán de digitalizar, optimizar y mejorar tanto la Junta de Delegados como el acceso a la información, tanto para padres como para alumnos, de las comunicaciones y eventos de la clase.\nBackend completo desde cero, interfaz pulida con notch apple-like, fácil administración desde cualquier lado, auto-notificación vía Telegram, chatbot, PWA, recordatorios, conexión con Apple y Google Calendar...\nResultado: padres y compañeros satisfechos.",
+    "descriptionEn": "With the goal of digitalizing, optimizing and improving both the Student Council and access to information — for parents and students alike — regarding class communications and events.\nComplete backend built from scratch, polished apple-like notch UI, easy administration from anywhere, auto-notification via Telegram, chatbot, PWA, reminders, Apple and Google Calendar integration...\nResult: satisfied parents and classmates.",
+    "image": "https://2bach.vercel.app/favicon.svg",
+    "technologies": ["Astro", "Firebase", "Telegram API", "Vercel", "ICS", "Typescript", "GSAP"],
+    "type": "Personal",
+    "demoUrl": "https://2bach.vercel.app/",
+    "githubUrl": "https://github.com/jaimegh-es/instiweb"
+  },
+  {
+    "title": "CoruñaBus",
+    "description": "La aplicación de los buses urbanos de Coruña hecha por quien los usa diariamente. La más completa y sin un solo anuncio.",
+    "descriptionEn": "The application of Coruña's urban buses made by those who use them daily. The most complete and without a single advertisement.",
+    "image": "https://xn--coruabus-g3a.inled.es/favicon.svg",
+    "technologies": ["Android", "APK", "APIs", "Astro", "Capacitor", "Java"],
+    "type": "Open Source",
+    "demoUrl": "https://xn--coruabus-g3a.inled.es/",
+    "githubUrl": "https://github.com/jaimegh-es/corunabus"
+  }
+]

@@ -1,8 +1,6 @@
 ---
-import { Mail, Github, Linkedin, ArrowRight, MessageCircle, Send } from "lucide-astro";
-import ProjectLinks from "./ProjectLinks.astro";
-import { getPersonalProjects } from "../data/personalProjects";
-import { getAllProjects } from "../data/projects";
+import { Mail, Github, Linkedin, Youtube, ArrowUpRight, MessageCircle, Send } from "lucide-astro";
+import featuredData from "../data/featuredProjects.json";
 import { getBlogPosts, createSlug } from "../lib/rss";
 
 interface Props {
@@ -15,30 +13,36 @@ const t = {
 	es: {
 		otherLang: "EN",
 		otherLangUrl: "/en",
+		role: "Desarrollador, usuario, friki y fundador",
 		tagline:
 			"Hola, soy JaimeGH, desarrollador fullstack y linux. Friki del sector :)",
+		socials: "Redes sociales",
+		contact: "Contacto",
+		about: "Sobre mí",
+		quote:
+			"Realmente apasionado por el desarrollo, buscando siempre la manera de satisfacer las necesidades del usuario e innovar en cualquier campo relacionado con el desarrollo. Creador de la famosa extensión de GNOME 'Codexbar for GNOME', el navegador Seafari y el conjunto de distribuciones Pulsar OS (featured on Distrowatch). Haciendo comunidad sin elitismos en la que todos son bienvenidos. Intentando salir de la Matrix y la telepantalla. Buscando aprender y mejorar continuamente.",
+		featured: "Proyectos destacados",
 		blog: "Blog",
 		blogSub: "Artículos sobre desarrollo, tecnología y más",
-		readMore: "Leer más",
-		featured: "Destacados",
-		personal: "Proyectos personales",
-		inled: "Proyectos de Inled",
-		inledSub: "Soluciones y servicios desarrollados para mi marca",
+		inledSub: "Mi marca bajo la cual desarrollo la gran mayoría de proyectos.",
 		demo: "Demo",
 		code: "Código",
 	},
 	en: {
 		otherLang: "ES",
 		otherLangUrl: "/",
+		role: "Developer, user, geek and founder",
 		tagline:
 			"Hello, I'm JaimeGH, fullstack and linux developer. Industry geek :)",
+		socials: "Social links",
+		contact: "Contact",
+		about: "About me",
+		quote:
+			"Really passionate about development, always looking for ways to satisfy user needs and innovate in any field related to development. Creator of the famous GNOME extension 'Codexbar for GNOME', the Seafari browser and the Pulsar OS distribution suite (featured on Distrowatch). Creating a community without elitism in which everyone is welcome. Trying to get out of the Matrix and the telescreen. Looking to continually learn and improve.",
+		featured: "Featured projects",
 		blog: "Blog",
 		blogSub: "Articles about development, technology and more",
-		readMore: "Read more",
-		featured: "Featured",
-		personal: "Personal projects",
-		inled: "Inled projects",
-		inledSub: "Solutions and services built for my brand",
+		inledSub: "My brand under which I develop the vast majority of projects.",
 		demo: "Demo",
 		code: "Code",
 	},
@@ -47,18 +51,43 @@ const t = {
 const avatar = "https://avatars.githubusercontent.com/u/200265524?v=4";
 const year = new Date().getFullYear();
 
-const personalProjects = getPersonalProjects();
-const featuredProjects = personalProjects.filter((p) => p.featured);
-const inledProjects = await getAllProjects();
+interface FeaturedProject {
+	title: string;
+	description: string;
+	descriptionEn?: string;
+	image: string;
+	technologies: string[];
+	demoUrl?: string;
+	githubUrl?: string;
+	type: string;
+}
+
+interface ProjectAction {
+	href: string;
+	label: string;
+}
+
+const featuredProjects = (featuredData as FeaturedProject[]).map((p) => ({
+	...p,
+	actions: [
+		p.demoUrl ? { href: p.demoUrl, label: t.demo } : null,
+		p.githubUrl ? { href: p.githubUrl, label: t.code } : null,
+	].filter((a): a is ProjectAction => a !== null),
+}));
+
 const posts = (await getBlogPosts()).slice(0, 4);
 
-const contact = [
-	{
-		label: "Email",
-		value: "contacto@inled.es",
-		href: "mailto:contacto@inled.es",
-		Icon: Mail,
-	},
+const dateLocale = lang === "es" ? "es-ES" : "en-US";
+
+function formatDate(date: string) {
+	return new Date(date).toLocaleDateString(dateLocale, {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+}
+
+const socials = [
 	{
 		label: "GitHub",
 		value: "@jaimegh-es",
@@ -72,28 +101,33 @@ const contact = [
 		Icon: Linkedin,
 	},
 	{
-		label: "Discord",
-		value: "link.inled.es/discord",
-		href: "https://link.inled.es/discord",
-		Icon: MessageCircle,
+		label: "YouTube",
+		value: "@jaimegh-es",
+		href: "https://www.youtube.com/@jaimegh-es",
+		Icon: Youtube,
 	},
+];
+
+const contact = [
 	{
 		label: "Telegram",
 		value: "link.inled.es/telegram",
 		href: "https://link.inled.es/telegram",
 		Icon: Send,
 	},
+	{
+		label: "Discord",
+		value: "link.inled.es/discord",
+		href: "https://link.inled.es/discord",
+		Icon: MessageCircle,
+	},
+	{
+		label: "Email",
+		value: "contacto@inled.es",
+		href: "mailto:contacto@inled.es",
+		Icon: Mail,
+	},
 ];
-
-const dateLocale = lang === "es" ? "es-ES" : "en-US";
-
-function formatDate(date: string) {
-	return new Date(date).toLocaleDateString(dateLocale, {
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	});
-}
 
 function desc(p: { description: string; descriptionEn?: string }) {
 	return lang === "en" ? (p.descriptionEn ?? p.description) : p.description;
@@ -101,506 +135,464 @@ function desc(p: { description: string; descriptionEn?: string }) {
 ---
 
 <main class="page">
-	<!-- Encabezado: foto, nombre, descripción y contacto -->
-	<header class="hero">
-		<img class="avatar" src={avatar} alt="Foto de Jaime González Herráiz" />
-		<h1 class="name">Jaime González Herráiz</h1>
-		<a class="lang-switch" href={t.otherLangUrl}>{t.otherLang}</a>
-		<p class="tagline">{t.tagline}</p>
+	<div class="frame">
+		<!-- HERO: foto + nombre + descripción -->
+		<section class="hero">
+			<div class="cell hero-photo">
+				<img src={avatar} alt="Foto de Jaime González Herráiz" />
+			</div>
+			<div class="cell hero-info">
+				<div class="hero-top">
+					<span class="mono-label">{t.role}</span>
+					<a class="lang" href={t.otherLangUrl}>{t.otherLang}</a>
+				</div>
+				<h1 class="name">Jaime González Herráiz</h1>
+				<p class="tagline">{t.tagline}</p>
+			</div>
+		</section>
 
-		<div class="contact">
+		<!-- REDES SOCIALES -->
+		<div class="section-label"><span class="num">01</span> {t.socials}</div>
+		<section class="row-3">
+			{socials.map(({ label, value, href, Icon }) => (
+				<a class="cell link-cell" href={href} target="_blank" rel="noopener noreferrer">
+					<div class="cell-head">
+						<Icon size={16} strokeWidth={1.5} />
+						<ArrowUpRight class="arrow" size={14} strokeWidth={1.5} />
+					</div>
+					<span class="cell-name">{label}</span>
+					<span class="cell-handle">{value}</span>
+				</a>
+			))}
+		</section>
+
+		<!-- CONTACTO -->
+		<div class="section-label"><span class="num">02</span> {t.contact}</div>
+		<section class="row-3">
 			{contact.map(({ label, value, href, Icon }) => (
-				<a class="contact-link" href={href} target="_blank" rel="noopener noreferrer">
-					<Icon size={15} />
-					<span>
-						{label}: <strong>{value}</strong>
-					</span>
+				<a class="cell link-cell" href={href} target="_blank" rel="noopener noreferrer">
+					<div class="cell-head">
+						<Icon size={16} strokeWidth={1.5} />
+						<ArrowUpRight class="arrow" size={14} strokeWidth={1.5} />
+					</div>
+					<span class="cell-name">{label}</span>
+					<span class="cell-handle">{value}</span>
 				</a>
 			))}
-		</div>
-	</header>
+		</section>
 
-	<!-- Blog -->
-	<section class="section">
-		<h2 class="section-title">{t.blog}</h2>
-		<div class="list">
-			{posts.map((post) => (
-				<a class="item blog-item" href={`/blog/${createSlug(post.title)}`}>
-					<div class="item-head">
-						<h3 class="item-title">{post.title}</h3>
-						<span class="item-date">{formatDate(post.pubDate)}</span>
-					</div>
-					<div class="blog-more">
-						{t.readMore} <ArrowRight size={14} />
-					</div>
-				</a>
-			))}
-		</div>
-	</section>
+		<!-- SOBRE MÍ -->
+		<div class="section-label"><span class="num">03</span> {t.about}</div>
+		<section class="row-1">
+			<div class="cell quote">{t.quote}</div>
+		</section>
 
-	<!-- Destacados -->
-	<section class="section">
-		<h2 class="section-title">{t.featured}</h2>
-		<div class="cards">
-			{featuredProjects.map((p) => (
-				<article class="card">
-					<div class="thumb">
-						<img src={p.image} alt={p.title} loading="lazy" />
+		<!-- PROYECTOS DESTACADOS -->
+		<div class="section-label"><span class="num">04</span> {t.featured}</div>
+		{featuredProjects.map((p) => (
+			<article class="project">
+				<div class="cell project-thumb">
+					<img src={p.image} alt={p.title} loading="lazy" />
+				</div>
+				<div class="cell project-body">
+					<h3 class="project-title">{p.title}</h3>
+					<p class="project-desc">{desc(p)}</p>
+				</div>
+				{p.actions.length > 0 && (
+					<div
+						class="project-actions"
+						style={`--cols: ${p.actions.length}`}
+					>
+						{p.actions.map((a) => (
+							<a
+								class="project-action"
+								href={a.href}
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								{a.label}
+								<ArrowUpRight size={14} strokeWidth={1.5} />
+							</a>
+						))}
 					</div>
-					<div class="card-body">
-						<h3 class="card-title">{p.title}</h3>
-						<p class="card-desc">{desc(p)}</p>
-						<div class="card-links">
-							<ProjectLinks
-								demoUrl={p.demoUrl}
-								githubUrl={p.githubUrl}
-								demoLabel={t.demo}
-								codeLabel={t.code}
-							/>
-						</div>
-					</div>
-				</article>
-			))}
-		</div>
-	</section>
+				)}
+			</article>
+		))}
 
-	<!-- Proyectos personales -->
-	<section class="section">
-		<h2 class="section-title">{t.personal}</h2>
-		<div class="list">
-			{personalProjects.map((p) => (
-				<article class="item">
-					<div class="item-thumb">
-						<img src={p.image} alt={p.title} loading="lazy" />
-					</div>
-					<div class="item-body">
-						<div class="item-head">
-							<h3 class="item-title">{p.title}</h3>
-							<div class="item-links">
-								<ProjectLinks
-									demoUrl={p.demoUrl}
-									githubUrl={p.githubUrl}
-									demoLabel={t.demo}
-									codeLabel={t.code}
-								/>
-							</div>
-						</div>
-						<p class="item-desc">{desc(p)}</p>
-						<div class="tags">
-							{p.technologies.map((tech) => (
-								<span class="tag">{tech}</span>
-							))}
-						</div>
-					</div>
-				</article>
-			))}
-		</div>
-	</section>
+		<!-- BLOG -->
+		<div class="section-label"><span class="num">05</span> {t.blog}</div>
+		<div class="cell section-sub">{t.blogSub}</div>
+		{posts.map((post) => (
+			<a class="blog-row" href={`/blog/${createSlug(post.title)}`}>
+				<span class="blog-date">{formatDate(post.pubDate)}</span>
+				<span class="blog-title">{post.title}</span>
+				<ArrowUpRight class="arrow" size={14} strokeWidth={1.5} />
+			</a>
+		))}
 
-	<!-- Proyectos de Inled -->
-	<section class="section">
-		<h2 class="section-title">{t.inled}</h2>
-		<p class="section-subtitle">{t.inledSub}</p>
-		<div class="list">
-			{inledProjects.map((p) => (
-				<article class="item">
-					<div class="item-thumb">
-						<img src={p.image} alt={p.title} loading="lazy" />
-					</div>
-					<div class="item-body">
-						<div class="item-head">
-							<h3 class="item-title">{p.title}</h3>
-							<div class="item-links">
-								<ProjectLinks
-									demoUrl={p.demoUrl}
-									githubUrl={p.githubUrl}
-									demoLabel={t.demo}
-									codeLabel={t.code}
-								/>
-							</div>
-						</div>
-						<p class="item-desc">{p.description}</p>
-						<div class="tags">
-							{p.technologies.map((tech) => (
-								<span class="tag">{tech}</span>
-							))}
-						</div>
-					</div>
-				</article>
-			))}
-		</div>
-	</section>
+		<!-- INLED -->
+		<a class="cta" href="https://inled.es" target="_blank" rel="noopener noreferrer">
+			<span class="cta-domain">inled.es</span>
+			<span class="cta-sub">
+				{t.inledSub}
+				<ArrowUpRight size={16} strokeWidth={1.5} />
+			</span>
+		</a>
 
-	<footer class="footer">
-		<p>© {year} Jaime González Herráiz</p>
-	</footer>
+		<!-- FOOTER -->
+		<footer class="footer">
+			<span>This website is free and open source, licensed under <a href="https://license.inled.es">MIT-INLED license</a>. </span>
+			<a class="footer-blog" href="/blog">
+				{t.blog}
+				<ArrowUpRight size={13} strokeWidth={1.5} />
+			</a>
+		</footer>
+	</div>
 </main>
 
-<style>
-	.page {
-		position: relative;
-		z-index: 10;
-		max-width: 680px;
-		margin: 0 auto;
-		padding: 5rem 1.5rem 4rem;
+<script>
+	// En pantallas táctiles (sin hover) el primer toque divide el recuadro
+	// en sus celdas de acción; el segundo toque sobre una celda navega.
+	if (window.matchMedia("(hover: none)").matches) {
+		const cards = document.querySelectorAll<HTMLElement>(".project");
+		cards.forEach((card) => {
+			if (!card.querySelector(".project-actions")) return;
+			card.addEventListener("click", (e) => {
+				const target = e.target as HTMLElement;
+				if (card.classList.contains("open") && target.closest("a")) return;
+				e.preventDefault();
+				const wasOpen = card.classList.contains("open");
+				cards.forEach((c) => c.classList.remove("open"));
+				if (!wasOpen) card.classList.add("open");
+			});
+		});
 	}
+</script>
 
+<style>
 	/* ---- Hero ---- */
 	.hero {
-		text-align: center;
-		margin-bottom: 5rem;
-		position: relative;
+		grid-template-columns: 180px 1fr;
 	}
 
-	.avatar {
-		width: 110px;
-		height: 110px;
-		border-radius: 50%;
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
-		margin-bottom: 1.25rem;
+	.hero-photo {
+		display: flex;
+	}
+
+	.hero-photo img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.hero-info {
+		padding: 1.4rem 1.4rem 1.6rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.hero-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1.1rem;
+	}
+
+	.lang {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		padding: 0.25rem 0.6rem;
+		border: 1px solid var(--line);
+		transition: border-color 0.15s ease, background 0.15s ease;
+	}
+
+	.lang:hover {
+		border-color: var(--line-strong);
+		background: var(--hover);
 	}
 
 	.name {
-		font-size: clamp(2.2rem, 6vw, 3.2rem);
-		font-weight: 300;
-		background: linear-gradient(135deg, #fff, #888);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		margin-bottom: 0.75rem;
-	}
-
-	.lang-switch {
-		position: absolute;
-		top: 0;
-		right: 0;
-		padding: 0.4rem 0.9rem;
-		color: rgba(255, 255, 255, 0.7);
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid rgba(255, 255, 255, 0.15);
-		border-radius: 999px;
-		text-decoration: none;
-		font-size: 0.85rem;
-		transition: all 0.25s ease;
-	}
-
-	.lang-switch:hover {
-		color: white;
-		border-color: rgba(255, 255, 255, 0.4);
+		font-size: clamp(1.6rem, 5vw, 2.1rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+		line-height: 1.15;
+		margin-bottom: 0.6rem;
 	}
 
 	.tagline {
-		color: rgba(255, 255, 255, 0.65);
-		font-size: 1.15rem;
-		line-height: 1.7;
-		max-width: 56ch;
-		margin: 0 auto 2.5rem;
-	}
-
-	.contact {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 0.75rem;
-	}
-
-	.contact-link {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.55rem 1rem;
-		color: rgba(255, 255, 255, 0.8);
-		background: rgba(255, 255, 255, 0.04);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 999px;
-		text-decoration: none;
-		font-size: 0.9rem;
-		transition: all 0.25s ease;
-	}
-
-	.contact-link strong {
-		font-weight: 400;
-		color: rgba(255, 255, 255, 0.95);
-	}
-
-	.contact-link:hover {
-		border-color: rgba(255, 255, 255, 0.4);
-		background: rgba(255, 255, 255, 0.08);
-		transform: translateY(-2px);
-	}
-
-	/* ---- Secciones ---- */
-	.section {
-		margin-bottom: 5rem;
-	}
-
-	.section-title {
-		font-size: 1.6rem;
-		font-weight: 300;
-		margin-bottom: 2rem;
-		color: rgba(255, 255, 255, 0.95);
-	}
-
-	.section-subtitle {
-		color: rgba(255, 255, 255, 0.55);
+		color: var(--muted);
 		font-size: 1rem;
-		margin-top: -1.25rem;
-		margin-bottom: 2rem;
+		line-height: 1.55;
 	}
 
-	/* ---- Cards (destacados) ---- */
-	.cards {
+	/* ---- Celdas enlazables (redes / contacto) ---- */
+	.link-cell {
+		padding: 1.1rem 1.1rem 1.2rem;
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.3rem;
+		transition: background 0.15s ease;
 	}
 
-	.card {
+	.link-cell:hover {
+		background: var(--hover);
+	}
+
+	.cell-head {
 		display: flex;
-		background: rgba(20, 20, 20, 0.5);
-		backdrop-filter: blur(14px);
-		-webkit-backdrop-filter: blur(14px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 14px;
-		overflow: hidden;
-		transition: border-color 0.3s ease;
+		justify-content: space-between;
+		align-items: center;
+		color: var(--fg);
+		margin-bottom: 0.7rem;
 	}
 
-	.card:hover {
-		border-color: rgba(255, 255, 255, 0.3);
+	.cell-head .arrow,
+	.blog-row .arrow {
+		color: var(--muted);
+		transition: transform 0.15s ease, color 0.15s ease;
 	}
 
-	.thumb {
-		width: 112px;
-		flex-shrink: 0;
-		align-self: stretch;
+	.link-cell:hover .arrow,
+	.blog-row:hover .arrow {
+		color: var(--fg);
+		transform: translate(2px, -2px);
+	}
+
+	.cell-name {
+		font-size: 0.95rem;
+		font-weight: 500;
+	}
+
+	.cell-handle {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: var(--muted);
+		overflow-wrap: anywhere;
+	}
+
+	/* ---- Quote ---- */
+	.quote {
+		padding: 2rem 1.6rem;
+		font-size: clamp(1.1rem, 2.6vw, 1.35rem);
+		line-height: 1.6;
+		font-weight: 400;
+		color: var(--fg);
+	}
+
+	/* ---- Proyectos destacados ---- */
+	.project {
+		position: relative;
+		grid-template-columns: 110px 1fr;
+	}
+
+	.project-thumb {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: radial-gradient(
-			circle at center,
-			rgba(255, 255, 255, 0.08) 0%,
-			rgba(255, 255, 255, 0.02) 60%,
-			transparent 100%
-		);
-		border-right: 1px solid rgba(255, 255, 255, 0.08);
-		padding: 1rem;
+		padding: 1.2rem;
 	}
 
-	.thumb img {
+	.project-thumb img {
 		width: 100%;
 		height: 100%;
+		max-height: 64px;
 		object-fit: contain;
-		filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
 	}
 
-	.card-body {
-		flex: 1;
-		min-width: 0;
+	.project-body {
+		padding: 1.2rem 1.4rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		padding: 1.1rem 1.25rem;
+		gap: 0.5rem;
 	}
 
-	.card-title {
-		font-size: 1.1rem;
-		font-weight: 400;
-		margin-bottom: 0.4rem;
-		color: rgba(255, 255, 255, 0.95);
+	.project-title {
+		font-size: 1.05rem;
+		font-weight: 500;
 	}
 
-	.card-desc {
-		color: rgba(255, 255, 255, 0.7);
-		line-height: 1.5;
-		font-size: 0.92rem;
+	.project-desc {
+		color: var(--muted);
+		font-size: 0.9rem;
+		line-height: 1.55;
 		white-space: pre-line;
-		margin-bottom: 0.75rem;
 		display: -webkit-box;
-		-webkit-line-clamp: 3;
+		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
 
-	.card-links {
-		display: flex;
-		gap: 1.25rem;
+	/*
+		Acciones: al hover (o al tocar en mobile) el recuadro entero del
+		proyecto se divide en 1 o 2 celdas clicables, una por acción.
+	*/
+	.project-actions {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		grid-template-columns: repeat(var(--cols, 2), 1fr);
+		gap: 1px;
+		background: var(--line);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
 	}
 
-	.card-links a,
-	.item-links a {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.3rem;
-		color: rgba(255, 255, 255, 0.8);
-		text-decoration: none;
-		font-size: 0.95rem;
-		transition: color 0.2s ease;
+	.project:hover .project-actions,
+	.project.open .project-actions {
+		opacity: 1;
+		pointer-events: auto;
 	}
 
-	.card-links a:hover,
-	.item-links a:hover {
-		color: white;
-	}
-
-	/* ---- Listas ---- */
-	.list {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.item {
-		display: flex;
-		gap: 1rem;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 14px;
-		padding: 1rem 1.25rem;
-		background: rgba(20, 20, 20, 0.45);
-		backdrop-filter: blur(14px);
-		-webkit-backdrop-filter: blur(14px);
-		transition: border-color 0.3s ease;
-	}
-
-	.item:hover {
-		border-color: rgba(255, 255, 255, 0.25);
-	}
-
-	.item-thumb {
-		width: 56px;
-		height: 56px;
-		flex-shrink: 0;
+	.project-action {
+		background: var(--bg);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: rgba(255, 255, 255, 0.03);
-		border-radius: 10px;
-		padding: 0.5rem;
+		gap: 0.4rem;
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		transition: background 0.15s ease, color 0.15s ease;
 	}
 
-	.item-thumb img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
+	.project-action:hover {
+		background: var(--fg);
+		color: var(--bg);
 	}
 
-	.item-body {
-		flex: 1;
-		min-width: 0;
+	/* ---- Blog (filas enlazables) ---- */
+	.section-sub {
+		padding: 0.7rem 1.1rem;
+		color: var(--muted);
+		font-size: 0.88rem;
+		border-top: 1px solid var(--line);
 	}
 
-	.item-head {
-		display: flex;
-		justify-content: space-between;
+	.blog-row {
+		display: grid;
+		grid-template-columns: 8rem 1fr auto;
 		align-items: baseline;
 		gap: 1rem;
-		margin-bottom: 0.4rem;
+		padding: 1rem 1.1rem;
+		border-top: 1px solid var(--line);
+		transition: background 0.15s ease;
 	}
 
-	.item-title {
-		font-size: 1.15rem;
-		font-weight: 400;
-		color: rgba(255, 255, 255, 0.95);
+	.blog-row:hover {
+		background: var(--hover);
 	}
 
-	.item-links {
-		display: flex;
-		gap: 1rem;
+	.blog-date {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: var(--muted);
 		white-space: nowrap;
 	}
 
-	.item-links a {
-		font-size: 0.9rem;
-	}
-
-	.item-date {
-		color: rgba(255, 255, 255, 0.5);
-		font-size: 0.9rem;
-		white-space: nowrap;
-	}
-
-	.item-desc {
-		color: rgba(255, 255, 255, 0.6);
+	.blog-title {
 		font-size: 0.95rem;
-		line-height: 1.6;
-		white-space: pre-line;
-		margin-bottom: 0.85rem;
+		font-weight: 500;
+		line-height: 1.4;
 	}
 
-	.blog-item {
-		text-decoration: none;
-		color: inherit;
+	/* ---- CTA inled.es ---- */
+	.cta {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: 0.4rem;
+		padding: 1.8rem 1.6rem;
+		transition: background 0.15s ease, color 0.15s ease;
 	}
 
-	.blog-item .item-head {
-		margin-bottom: 0;
+	.cta:hover {
+		background: var(--fg);
+		color: var(--bg);
 	}
 
-	.blog-more {
+	.cta-domain {
+		font-size: clamp(1.6rem, 5vw, 2.1rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+
+	.cta-sub {
+		font-family: var(--font-mono);
+		font-size: 0.75rem;
+		color: var(--muted);
 		display: inline-flex;
 		align-items: center;
-		gap: 0.35rem;
-		color: rgba(255, 255, 255, 0.75);
-		font-size: 0.95rem;
+		gap: 0.4rem;
+		transition: color 0.15s ease;
 	}
 
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-
-	.tag {
-		padding: 0.25rem 0.8rem;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 999px;
-		font-size: 0.8rem;
-		color: rgba(255, 255, 255, 0.75);
+	.cta:hover .cta-sub {
+		color: var(--bg);
 	}
 
 	/* ---- Footer ---- */
 	.footer {
-		margin-top: 5rem;
-		padding-top: 2rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.08);
-		text-align: center;
-		color: rgba(255, 255, 255, 0.4);
-		font-size: 0.9rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.9rem 1.1rem;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		color: var(--muted);
 	}
 
-	@media (max-width: 560px) {
-		.item-head {
+	.footer-blog {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		transition: color 0.15s ease;
+	}
+
+	.footer-blog:hover {
+		color: var(--fg);
+	}
+
+	/* ---- Mobile: todo apilado en una columna ---- */
+	@media (max-width: 640px) {
+		.hero {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-photo {
+			height: 200px;
+		}
+
+		.project {
+			grid-template-columns: 1fr;
+		}
+
+		.project-thumb {
+			padding: 1rem;
+		}
+
+		.project-thumb img {
+			max-height: 48px;
+		}
+
+		.blog-row {
+			grid-template-columns: 1fr auto;
+			gap: 0.35rem 1rem;
+		}
+
+		.blog-date {
+			grid-column: 1 / -1;
+		}
+
+		.footer {
 			flex-direction: column;
-			align-items: stretch;
-			gap: 0.6rem;
-		}
-
-		.item-links {
-			white-space: normal;
-		}
-
-		.card-links,
-		.item-links {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
+			align-items: flex-start;
 			gap: 0.5rem;
-			width: 100%;
-		}
-
-		.card-links a,
-		.item-links a {
-			justify-content: center;
-			padding: 0.9rem 1rem;
-			gap: 0.5rem;
-			font-size: 1.05rem;
-			background: rgba(255, 255, 255, 0.06);
-			border: 1px solid rgba(255, 255, 255, 0.18);
-			border-radius: 12px;
 		}
 	}
 </style>

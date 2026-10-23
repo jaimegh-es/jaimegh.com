@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Header from "../../components/Header.astro";
 import { Plus, Copy, Check, Edit2, Trash2, RefreshCw } from "lucide-astro";
 import { getPersonalProjects } from "../../data/personalProjects";
 
@@ -8,7 +7,6 @@ const existingProjects = getPersonalProjects();
 ---
 
 <Layout title="Admin Proyectos - JaimeGH" description="La mayor vaguedad del mundo: añadir mis proyectos sin tocar el typescript. Así queda más bonito.">
-	<Header />
 	<main class="admin-page">
 		<div class="admin-header">
 			<h1 class="page-title">Gestión de Proyectos</h1>
@@ -245,7 +243,7 @@ const existingProjects = getPersonalProjects();
 <style>
 	.admin-page {
 		min-height: 100vh;
-		padding: 10rem 2rem 6rem;
+		padding: 4rem 2rem 6rem;
 		background: #050505;
 	}
 

@@ -1,0 +1,109 @@
+---
+import { Home, Share2 } from "lucide-astro";
+---
+
+<div class="island">
+	<a class="island-btn" href="/" aria-label="Volver al inicio">
+		<Home size={18} strokeWidth={1.5} />
+	</a>
+	<button class="island-btn" id="island-share" aria-label="Compartir esta página">
+		<Share2 size={18} strokeWidth={1.5} />
+		<span class="toast" id="island-toast">Enlace copiado</span>
+	</button>
+</div>
+<div class="island-spacer" aria-hidden="true"></div>
+
+<script>
+	const shareBtn = document.getElementById("island-share");
+	const toast = document.getElementById("island-toast");
+
+	shareBtn?.addEventListener("click", async () => {
+		const url = location.href;
+		const title = document.title;
+
+		if (navigator.share) {
+			try {
+				await navigator.share({ title, url });
+			} catch {
+				// compartido cancelado
+			}
+			return;
+		}
+
+		try {
+			await navigator.clipboard.writeText(url);
+			toast?.classList.add("show");
+			setTimeout(() => toast?.classList.remove("show"), 1800);
+		} catch {
+			// sin clipboard disponible
+		}
+	});
+</script>
+
+<style>
+	.island {
+		position: fixed;
+		bottom: max(1.25rem, env(safe-area-inset-bottom));
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		gap: 1px;
+		background: var(--line);
+		border: 1px solid var(--line);
+		border-radius: 0;
+		overflow: hidden;
+		z-index: 1000;
+	}
+
+	.island-btn {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 3.25rem;
+		height: 3.25rem;
+		background: var(--bg);
+		color: var(--fg);
+		border: none;
+		cursor: pointer;
+		transition: background 0.15s ease, color 0.15s ease;
+	}
+
+	.island-btn:hover {
+		background: var(--fg);
+		color: var(--bg);
+	}
+
+	.toast {
+		position: absolute;
+		bottom: calc(100% + 0.6rem);
+		left: 50%;
+		transform: translateX(-50%);
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		white-space: nowrap;
+		padding: 0.35rem 0.6rem;
+		background: var(--bg);
+		border: 1px solid var(--line);
+		color: var(--fg);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.15s ease;
+	}
+
+	.toast.show {
+		opacity: 1;
+	}
+
+	/* Solo mobile: en desktop se oculta y no ocupa sitio */
+	.island-spacer {
+		height: 4.5rem;
+	}
+
+	@media (min-width: 641px) {
+		.island,
+		.island-spacer {
+			display: none;
+		}
+	}
+</style>
